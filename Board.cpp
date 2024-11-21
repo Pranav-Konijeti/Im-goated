@@ -264,7 +264,7 @@ void Board::displayBoard(vector<bool> board_type)
 bool Board::movePlayer(int player_index, bool board_type)
 {
     // Increment player position
-    _player_position[player_index]+=5;
+    _player_position[player_index]++;
     playerEvent(player_index, board_type);
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {

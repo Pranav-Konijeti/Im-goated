@@ -24,7 +24,7 @@ public:
     void initializeBoard(int player_count, vector<bool> board_type);
     void displayBoard(vector<bool> board_type);
     bool movePlayer(int player_index);
-    void playerStatus(int player_index);
+    void playerEvent(int player_index);
     int getPlayerPosition(int player_index) const;
 };
 

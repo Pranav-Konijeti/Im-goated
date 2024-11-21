@@ -9,19 +9,24 @@
 #define GREY "\033[48;2;128;128;128m" /* Grey (128,128,128) */
 #define RESET "\033[0m"
 
-void Board::initializeBoard()
+void Board::initializeBoard(int player_count, vector<bool> board_type)
 {
     // Seed random number generator in your main function once
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < player_count; i++)
     {
-        initializeTiles(i);  // This ensures each lane has a unique tile distribution
+        if(board_type[i] == 0){
+            initializePrideLands(i);
+        }else{
+            initializeCubTraining(i);
+        }
+// This ensures each lane has a unique tile distribution
     }
 }
 
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time()
 
-void Board::initializeTiles(bool board_type)
+void Board::initializePrideLands(int player_index)
 {
     Tile temp;
     int green_count = 0;
@@ -67,7 +72,57 @@ void Board::initializeTiles(bool board_type)
         }
 
         // Assign the tile to the board for the specified lane
-        _tiles[board_type][i] = temp;
+        _tiles[player_index][i] = temp;
+    }
+}
+
+void Board::initializeCubTraining(int player_index)
+{
+    Tile temp;
+    int green_count = 0;
+    int total_tiles = _BOARD_SIZE;
+
+    // Keep track of green tile positions to ensure we place exactly 30 greens
+    for (int i = 0; i < total_tiles; i++)
+    {
+        if (i == total_tiles - 1) {
+            // Set the last tile as Orange for "Pride Rock"
+            temp.color = 'O';
+        } 
+        else if (i == 0) {
+            // Set the last tile as Orange for "Pride Rock"
+            temp.color = 'Y';
+        } 
+        else if (green_count < 30 && (rand() % (total_tiles - i) < 30 - green_count)) {
+            temp.color = 'G';
+            green_count++;
+        }
+        else
+        {
+            // Randomly assign one of the other colors: Blue, Pink, Brown, Red, Purple
+            int color_choice = rand() % 5;
+            switch (color_choice)
+            {
+                case 0:
+                    temp.color = 'B'; // Blue
+                    break;
+                case 1:
+                    temp.color = 'P'; // Pink
+                    break;
+                case 2:
+                    temp.color = 'N'; // Brown
+                    break;
+                case 3:
+                    temp.color = 'R'; // Red
+                    break;
+                case 4:
+                    temp.color = 'U'; // Purple
+                    break;
+            }
+        }
+
+        // Assign the tile to the board for the specified lane
+        _tiles[player_index][i] = temp;
     }
 }
 
@@ -75,16 +130,16 @@ void Board::initializeTiles(bool board_type)
 Board::Board()
 {
     _player_count = 1;
-    _board_type = 0;
+    _board_type = {0};
 
     // Initialize player position
     _player_position[0] = 0;
 
     // Initialize tiles
-    initializeTiles(_player_position[0]);
+    initializePrideLands(_player_position[0]);
 }
 
-Board::Board(int player_count, bool board_type)
+Board::Board(int player_count, vector<bool> board_type)
 {
     if (player_count > _MAX_PLAYERS)
     {
@@ -105,7 +160,7 @@ Board::Board(int player_count, bool board_type)
 
     // Initialize tiles
 
-    initializeBoard();
+    initializeBoard(player_count, board_type);
 }
 
 bool Board::isPlayerOnTile(int player_index, int pos)
@@ -117,7 +172,7 @@ bool Board::isPlayerOnTile(int player_index, int pos)
     return false;
 }
 
-void Board::displayTile(int player_index, int pos)
+void Board::displayTile(int player_index, int pos, bool board_type)
 {
     // string space = "                                       ";
     string color = "";
@@ -126,35 +181,35 @@ void Board::displayTile(int player_index, int pos)
     // Template for displaying a tile: <line filler space> <color start> |<player symbol or blank space>| <reset color> <line filler space> <endl>
 
     // Determine color to display
-    if (_tiles[player_index][pos].color == 'R')
+    if (_tiles[board_type][pos].color == 'R')
     {
         color = RED;
     }
-    else if (_tiles[player_index][pos].color == 'G')
+    else if (_tiles[board_type][pos].color == 'G')
     {
         color = GREEN;
     }
-    else if (_tiles[player_index][pos].color == 'B')
+    else if (_tiles[board_type][pos].color == 'B')
     {
         color = BLUE;
     }
-    else if (_tiles[player_index][pos].color == 'U')
+    else if (_tiles[board_type][pos].color == 'U')
     {
         color = PURPLE;
     }
-    else if (_tiles[player_index][pos].color == 'N')
+    else if (_tiles[board_type][pos].color == 'N')
     {
         color = BROWN;
     }
-    else if (_tiles[player_index][pos].color == 'P')
+    else if (_tiles[board_type][pos].color == 'P')
     {
         color = PINK;
     }
-    else if (_tiles[player_index][pos].color == 'O')
+    else if (_tiles[board_type][pos].color == 'O')
     {
         color = ORANGE;
     }
-    else if (_tiles[player_index][pos].color == 'Y')
+    else if (_tiles[board_type][pos].color == 'Y')
     {
         color = GREY;
     }
@@ -169,20 +224,20 @@ void Board::displayTile(int player_index, int pos)
     }
 }
 
-void Board::displayTrack(int player_index)
+void Board::displayTrack(int player_index, bool board_type)
 {
     for (int i = 0; i < _BOARD_SIZE; i++)
     {
-        displayTile(player_index, i);
+        displayTile(player_index, i, board_type);
     }
     cout << endl;
 }
 
-void Board::displayBoard()
+void Board::displayBoard(vector<bool> board_type)
 {
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < board_type.size(); i++)
     {
-        displayTrack(i);
+        displayTrack(i, board_type[i]);
         if (i == 0) {
             cout << endl;  // Add an extra line between the two lanes
         }

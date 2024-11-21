@@ -31,6 +31,7 @@ void Board::initializePrideLands(int player_index)
     Tile temp;
     int green_count = 0;
     int total_tiles = _BOARD_SIZE;
+    int half_board = _BOARD_SIZE / 2;
 
     // Keep track of green tile positions to ensure we place exactly 30 greens
     for (int i = 0; i < total_tiles; i++)
@@ -49,28 +50,35 @@ void Board::initializePrideLands(int player_index)
         }
         else
         {
-            // Randomly assign one of the other colors: Blue, Pink, Brown, Red, Purple
-            int color_choice = rand() % 5;
-            switch (color_choice)
-            {
-                case 0:
-                    temp.color = 'B'; // Blue
-                    break;
-                case 1:
-                    temp.color = 'P'; // Pink
-                    break;
-                case 2:
-                    temp.color = 'N'; // Brown
-                    break;
-                case 3:
-                    temp.color = 'R'; // Red
-                    break;
-                case 4:
-                    temp.color = 'U'; // Purple
-                    break;
-            }
+                if(i < half_board){
+                    // Randomly assign one of the other colors: Blue, Pink, Brown, Red, Purple
+                    int color_chance = rand() % 100;
+                    if(color_chance < 25){
+                        temp.color = 'R'; //graveyard 25%
+                    }else if(color_chance < 50){
+                        temp.color = 'B'; //hyena 25%
+                    }else if(color_chance < 70){
+                        temp.color = 'P'; //advisor 20%
+                    }else if(color_chance < 75){
+                        temp.color = 'B'; //oasis 5%
+                    }else{
+                        temp.color = 'P'; //challenge 25%
+                    }
+                }else{
+                    int color_chance = rand() % 100;
+                    if(color_chance < 15){
+                        temp.color = 'R'; //graveyard 15%
+                    }else if(color_chance < 30){
+                        temp.color = 'B'; //hyena 15%
+                    }else if(color_chance < 50){
+                        temp.color = 'P'; //advisor 20%
+                    }else if(color_chance < 75){
+                        temp.color = 'B'; //oasis 25%
+                    }else{
+                        temp.color = 'P'; //challenge 25%
+                    }
+                }
         }
-
         // Assign the tile to the board for the specified lane
         _tiles[player_index][i] = temp;
     }
@@ -81,6 +89,7 @@ void Board::initializeCubTraining(int player_index)
     Tile temp;
     int green_count = 0;
     int total_tiles = _BOARD_SIZE;
+    int half_board = _BOARD_SIZE / 2;
 
     // Keep track of green tile positions to ensure we place exactly 30 greens
     for (int i = 0; i < total_tiles; i++)
@@ -93,34 +102,41 @@ void Board::initializeCubTraining(int player_index)
             // Set the last tile as Orange for "Pride Rock"
             temp.color = 'Y';
         } 
-        else if (green_count < 30 && (rand() % (total_tiles - i) < 30 - green_count)) {
+        else if (green_count < 20 && (rand() % (total_tiles - i) < 20 - green_count)) {
             temp.color = 'G';
             green_count++;
         }
         else
         {
-            // Randomly assign one of the other colors: Blue, Pink, Brown, Red, Purple
-            int color_choice = rand() % 5;
-            switch (color_choice)
-            {
-                case 0:
-                    temp.color = 'B'; // Blue
-                    break;
-                case 1:
-                    temp.color = 'P'; // Pink
-                    break;
-                case 2:
-                    temp.color = 'N'; // Brown
-                    break;
-                case 3:
-                    temp.color = 'R'; // Red
-                    break;
-                case 4:
-                    temp.color = 'U'; // Purple
-                    break;
-            }
+                if(i < half_board){
+                    // Randomly assign one of the other colors: Blue, Pink, Brown, Red, Purple
+                    int color_chance = rand() % 100;
+                    if(color_chance < 20){
+                        temp.color = 'R'; //graveyard 20%
+                    }else if(color_chance < 40){
+                        temp.color = 'B'; //hyena 20%
+                    }else if(color_chance < 55){
+                        temp.color = 'P'; //advisor 15%
+                    }else if(color_chance < 80){
+                        temp.color = 'B'; //oasis 25%
+                    }else{
+                        temp.color = 'P'; //challenge 20%
+                    }
+                }else{
+                    int color_chance = rand() % 100;
+                    if(color_chance < 20){
+                        temp.color = 'R'; //graveyard 20%
+                    }else if(color_chance < 40){
+                        temp.color = 'B'; //hyena 20%
+                    }else if(color_chance < 55){
+                        temp.color = 'P'; //advisor 15%
+                    }else if(color_chance < 70){
+                        temp.color = 'B'; //oasis 15%
+                    }else{
+                        temp.color = 'P'; //challenge 30%
+                    }
+                }
         }
-
         // Assign the tile to the board for the specified lane
         _tiles[player_index][i] = temp;
     }

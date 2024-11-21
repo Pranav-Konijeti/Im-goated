@@ -23,8 +23,8 @@ public:
     void displayTrack(int player_index, bool board_type);
     void initializeBoard(int player_count, vector<bool> board_type);
     void displayBoard(vector<bool> board_type);
-    bool movePlayer(int player_index);
-    void playerEvent(int player_index);
+    bool movePlayer(int player_index, bool board_type);
+    void playerEvent(int player_index, bool board_type);
     int getPlayerPosition(int player_index) const;
 };
 

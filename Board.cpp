@@ -264,7 +264,7 @@ bool Board::movePlayer(int player_index)
 {
     // Increment player position
     _player_position[player_index]++;
-    playerIs(player_index);
+    playerEvent(player_index);
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {
         // Player reached last tile
@@ -273,7 +273,7 @@ bool Board::movePlayer(int player_index)
     return false;
 }
 
-void Board::playerIs(int player_index)
+void Board::playerEvent(int player_index)
 {
     char tile = _tiles[player_index][_player_position[player_index]].color;
     switch(tile)

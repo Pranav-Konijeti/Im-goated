@@ -56,7 +56,7 @@ void Board::initializePrideLands(int player_index)
                     if(color_chance < 25){
                         temp.color = 'R'; //graveyard 25%
                     }else if(color_chance < 50){
-                        temp.color = 'B'; //hyena 25%
+                        temp.color = 'N'; //hyena 25%
                     }else if(color_chance < 70){
                         temp.color = 'P'; //advisor 20%
                     }else if(color_chance < 75){
@@ -69,7 +69,7 @@ void Board::initializePrideLands(int player_index)
                     if(color_chance < 15){
                         temp.color = 'R'; //graveyard 15%
                     }else if(color_chance < 30){
-                        temp.color = 'B'; //hyena 15%
+                        temp.color = 'N'; //hyena 15%
                     }else if(color_chance < 50){
                         temp.color = 'P'; //advisor 20%
                     }else if(color_chance < 75){
@@ -251,7 +251,8 @@ void Board::displayTrack(int player_index, bool board_type)
 
 void Board::displayBoard(vector<bool> board_type)
 {
-    for (int i = 0; i < board_type.size(); i++)
+    int board_size = board_type.size();
+    for (int i = 0; i < board_size; i++)
     {
         displayTrack(i, board_type[i]);
         if (i == 0) {
@@ -263,7 +264,7 @@ void Board::displayBoard(vector<bool> board_type)
 bool Board::movePlayer(int player_index)
 {
     // Increment player position
-    _player_position[player_index]++;
+    _player_position[player_index]+= 5;
     playerEvent(player_index);
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {

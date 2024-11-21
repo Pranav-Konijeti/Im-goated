@@ -44,7 +44,7 @@ void Board::initializePrideLands(int player_index)
             // Set the last tile as Orange for "Pride Rock"
             temp.color = 'Y';
         } 
-        else if (green_count < 30 && (rand() % (total_tiles - i) < 30 - green_count)) {
+        else if (green_count < 20 && (rand() % (total_tiles - i) < 20 - green_count)) {
             temp.color = 'G';
             green_count++;
         }
@@ -102,7 +102,7 @@ void Board::initializeCubTraining(int player_index)
             // Set the last tile as Orange for "Pride Rock"
             temp.color = 'Y';
         } 
-        else if (green_count < 20 && (rand() % (total_tiles - i) < 20 - green_count)) {
+        else if (green_count < 30 && (rand() % (total_tiles - i) < 30 - green_count)) {
             temp.color = 'G';
             green_count++;
         }

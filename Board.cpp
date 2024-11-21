@@ -264,12 +264,36 @@ bool Board::movePlayer(int player_index)
 {
     // Increment player position
     _player_position[player_index]++;
+    playerIs(player_index);
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {
         // Player reached last tile
         return true;
     }
     return false;
+}
+
+void Board::playerIs(int player_index)
+{
+    char tile = _tiles[player_index][_player_position[player_index]].color;
+    switch(tile)
+    {
+        case 'B':
+           cout << "You've found a peaceful oasis! This grants the player an extra turn to keep moving forward—take a deep breath and relax; you also gain 200 Stamina, Strength, and Wisdom Points." << endl;
+           break;
+        case 'P':
+            cout << "Welcome to the land of enrichment - when landing on this tile, your Stamina, Strength, and Wisdom Points increase by 300, and you get to choose an advisor from the available list of advisors. If you already have an advisor, you can switch your advisor out for a different one from the list or keep your original advisor. Don’t forget - an advisor can protect you from random events that negatively impact your Pride Points." << endl;
+            break;
+        case 'R':
+            cout << "Uh-oh, you've stumbled into the Graveyard! This forces the player to move back 10 tiles and lose 100 Stamina, Strength, and Wisdom Points." << endl;
+            break;
+        case 'N':
+            cout << "The Hyenas are on the prowl! They drag you back to where you were last, and the journey comes at a cost. This returns the player to their previous position. In addition, the player's Stamina Points decrease by 300 Points." << endl;
+            break;
+        case 'U':
+            cout << "Time for a test of wits! Land here, and you'll face a riddle randomly pulled from the riddles.txt file. Answer correctly, and you'll earn a boost of 500 Points to your Wisdom Trait—your cleverness pays off!" << endl;
+            break;
+    }
 }
 
 int Board::getPlayerPosition(int player_index) const

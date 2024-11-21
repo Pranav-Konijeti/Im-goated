@@ -261,11 +261,11 @@ void Board::displayBoard(vector<bool> board_type)
     }
 }
 
-bool Board::movePlayer(int player_index)
+bool Board::movePlayer(int player_index, bool board_type)
 {
     // Increment player position
-    _player_position[player_index]+= 5;
-    playerEvent(player_index);
+    _player_position[player_index]+=5;
+    playerEvent(player_index, board_type);
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {
         // Player reached last tile
@@ -274,9 +274,9 @@ bool Board::movePlayer(int player_index)
     return false;
 }
 
-void Board::playerEvent(int player_index)
+void Board::playerEvent(int player_index, bool board_type)
 {
-    char tile = _tiles[player_index][_player_position[player_index]].color;
+    char tile = _tiles[board_type][_player_position[player_index]].color;
     switch(tile)
     {
         case 'B':

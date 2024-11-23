@@ -1,6 +1,6 @@
-#include <iostream>
+#ifndef PLAYER_H
+#define PLAYER_H
 #include <string>
-using namespace std;
 
 class Player{
 private:
@@ -33,3 +33,5 @@ public:
     void toPrideLands();
     void printStats();
 };
+
+#endif

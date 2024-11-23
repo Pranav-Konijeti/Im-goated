@@ -1,4 +1,4 @@
-#include "GOL.h"
+#include "Player.h"
 
 //Constructors
 Player::Player(){

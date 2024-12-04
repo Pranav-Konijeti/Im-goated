@@ -15,7 +15,11 @@ int main() {
     string pathChoice;
     string playerCount;
     int playerCountCounter = 0;
-    int pathChoiceCounter = 0;
+    //int pathChoiceCounter = 0;
+
+    vector<string> playerName;
+    vector<Player> playerData;
+    
     ifstream file("characters.txt");
     if (!file.is_open()){
         cout << "Error could not open file 'characters.txt'" << endl;
@@ -53,11 +57,12 @@ int main() {
         playerCountCounter++;
     } while(playerCount != "2" && playerCount != "3" && playerCount != "4" && playerCount != "5");
     
-    cout << "Please enter your name: ";
-    cin >> tempName;
+    for(int i = 0; i < stoi(playerCount); i++){
+        cout << "Player " << i + 1 << ", Please enter your name: ";
+        cin >> tempName;
 
-    cout << endl << "Thank you, " << tempName << ". Choose your character from the list above." << endl;
-    cin >> tempChoice;
-
+        cout << endl << "Thank you, " << tempName << ". Choose your character from the list above." << endl;
+        cin >> tempChoice;
+    }
     return 0;
 }

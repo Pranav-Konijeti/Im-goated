@@ -15,6 +15,8 @@ int main() {
     string pathChoice;
     string playerCount;
     int playerCountCounter = 0;
+    int pathChoiceInteger;
+    vector<int> boardType;
     //int pathChoiceCounter = 0;
 
     vector<string> playerName;
@@ -63,6 +65,31 @@ int main() {
 
         cout << endl << "Thank you, " << tempName << ". Choose your character from the list above." << endl;
         cin >> tempChoice;
+    }
+
+    for(int i = 0; i < stoi(playerCount); i++){
+        cout << "Player " << playerName[i] << ", enter 1 or 2 to choose the path your character shall embark on." << endl << endl << "Path 1: Pride Lands           Path 2: Cub Training" << endl;
+        
+        
+        do{
+            if(pathChoiceCounter > 0){
+                cout << "Invalid path choice chosen. Please type 1 to choose Pride Lands or type 2 to choose Cub Training." << endl;
+            }
+            getline(cin, pathChoice);
+            pathChoiceCounter++;
+        } while(pathChoice != "1" && pathChoice != "2");
+        pathChoiceInteger = stoi(pathChoice);
+        
+        boardType.push_back(pathChoiceInteger-1);
+
+        pathChoiceCounter = 0;
+
+        if(pathChoice == "1"){
+            cout << "You chose: Pride Lands" << endl;
+        }
+        else{
+            cout << "You chose: Cub Training" << endl;
+        }
     }
     return 0;
 }

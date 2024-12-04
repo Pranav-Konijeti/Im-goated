@@ -1,5 +1,5 @@
 playerName|age|strength|stamina|wisdom|pridePoints
-Mel|250||750|1000|20000
+Mel|10|250|750|1000|2000
 Miqel|2|1000|750|250|20000
 Ryk|12|500|1000|500|20000
 Mog|17|250|1000|750|20000

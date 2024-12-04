@@ -12,6 +12,10 @@ int main() {
     string tempName;
     string tempChoice;
 
+    string pathChoice;
+    string playerCount;
+    int playerCountCounter = 0;
+    int pathChoiceCounter = 0;
     ifstream file("characters.txt");
     if (!file.is_open()){
         cout << "Error could not open file 'characters.txt'" << endl;
@@ -38,6 +42,17 @@ int main() {
     }
 
     cout << "Welcome to Game of Life" << endl;
+    cout << "Enter the number of players that will participate, between 2 and 5." << endl;
+    
+    do{
+        if(playerCountCounter > 0){
+            cout << "Invalid player count chosen. Please choose a player count between 2 and 5" << endl;
+        }
+        getline(cin, playerCount);
+
+        playerCountCounter++;
+    } while(playerCount != "2" && playerCount != "3" && playerCount != "4" && playerCount != "5");
+    
     cout << "Please enter your name: ";
     cin >> tempName;
 

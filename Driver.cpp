@@ -18,7 +18,7 @@ int main() {
     int playerChoiceCounter = 0;
     int breaker1 = 0;
     int pathChoiceInteger;
-    //int pathChoiceCounter = 0;
+    int pathChoiceCounter = 0;
 
     vector<int> boardType;
     vector<string> playerName;

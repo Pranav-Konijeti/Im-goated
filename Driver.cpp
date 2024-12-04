@@ -68,7 +68,7 @@ int main() {
         getline(cin, tempName);
         playerName.push_back(tempName);
 
-        cout << endl << "Thank you, " << tempName << ". Choose your character from the list above." << endl;
+        cout << endl << "Thank you, " << tempName << ". Choose your lion character from the list above." << endl;
         do{
             breaker1 = 0;
 

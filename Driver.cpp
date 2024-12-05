@@ -14,19 +14,21 @@ int main() {
     string pathChoice;
     string playerCount;
     string characterLine;
-    string advisorLine;
+    string advisor[5];
     
     int playerCountCounter = 0;
     int playerChoiceCounter = 0;
     int breaker1 = 0;
     int pathChoiceInteger;
     int pathChoiceCounter = 0;
+    int advisorChoiceCounter = 0;
 
     vector<int> boardType;
     vector<string> playerName;
     vector<Player> playerData;
     vector<Player> characterList;
     vector<string> chosenCharacters;
+
     
     ifstream characterFile("characters.txt");
     if (!characterFile.is_open()){
@@ -55,7 +57,7 @@ int main() {
         cout << endl;
     }
 
-    cout << "Welcome to Game of Life" << endl;
+    cout << "Welcome to Game of Life." << endl;
     cout << "Enter the number of players that will participate, between 2 and 5." << endl;
     
     do{
@@ -125,11 +127,27 @@ int main() {
         pathChoiceCounter = 0;
 
         if(pathChoice == "1"){
-            cout << "You chose: Pride Lands" << endl;
+            playerData[i].toPrideLands(200, 200, 200);
+            cout << "You chose: Pride Lands. You gained 200 strength, 200 stamina, 200 wisdom, and 5000 pride points. Unfortunately, you do not get to choose an advisor at this time." << endl;
         }
         else{
-            cout << "You chose: Cub Training" << endl;
+            playerData[i].trainCub(500, 500, 1000);
+            cout << "You chose: Cub Training. You gained 500 strength, 500 stamina, 1000 wisdom, but lost 5000 pride points. Now please choose an advisor from the list below by typing their name." << endl << endl;
+            cout << "1. Rafiki - Invisibility (the ability to become un-seen)" << endl;
+            cout << "2. Nala - Night Vision (the ability to see clearly in darkness)" << endl;
+            cout << "3. Sarabi - Energy Manipulation (the ability to shape and control the properties of energy)" << endl;
+            cout << "4. Zazu - Weather Control (the ability to influence and manipulate weather patterns)" << endl;
+            cout << "5. Sarafina - Super Speed (the ability to run 4x faster than the maximum speed of lions)" << endl;
+            do{
+                if(advisorChoiceCounter > 0){
+                    cout << "Invalid advisor chosen. Please choose an advisor from the list above." << endl;
+                }
+                getline(cin, advisor[i]);
+                advisorChoiceCounter++;
+            } while(advisor[i] != "Rafiki" && advisor[i] != "Nala" && advisor[i] != "Sarabi" && advisor[i] != "Zazu" && advisor[i] != "Sarafina");
+            cout << "You chose: " << advisor[i] << "." << endl;
         }
+        advisorChoiceCounter = 0;
     }
     return 0;
 }

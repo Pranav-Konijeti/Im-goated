@@ -32,3 +32,9 @@ int Library::split(string input_string, char separator, string arr[], const int 
     }
     return splits;
 }
+
+int Library::runSpinner(int player_index){
+    srand(time(0));
+    int rNum = rand() % 6 + 1;
+    return rNum;
+}

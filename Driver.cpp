@@ -23,8 +23,8 @@ int main() {
     vector<int> boardType;
     vector<string> playerName;
     vector<Player> playerData;
+    vector<Player> characterList;
     vector<string> chosenCharacters;
-
     
     ifstream file("characters.txt");
     if (!file.is_open()){
@@ -46,6 +46,9 @@ int main() {
         Player currentPlayer(player[0], stoi(player[2]), stoi(player[3]), stoi(player[4]));
         currentPlayer.setAge(stoi(player[1]));
         currentPlayer.setPridePoints(stoi(player[5]));
+
+        characterList.push_back(currentPlayer);
+
         currentPlayer.printStats();
         
         cout << endl;
@@ -68,7 +71,7 @@ int main() {
         getline(cin, tempName);
         playerName.push_back(tempName);
 
-        cout << endl << "Thank you, " << tempName << ". Choose your lion character from the list above." << endl;
+        cout << endl << "Thank you, " << tempName << ". Choose your character from the list above." << endl;
         do{
             breaker1 = 0;
 
@@ -96,6 +99,11 @@ int main() {
         } while((tempChoice != "Mel" && tempChoice != "Miqel" && tempChoice != "Ryk" && tempChoice != "Mog" && tempChoice != "Ren") || breaker1 > 0);
         playerChoiceCounter = 0;
         chosenCharacters.push_back(tempChoice);
+        for(int k = 0; k < 5; k++){
+            if(tempChoice == characterList[k].getName()){
+                playerData.push_back(characterList[k]);
+            }
+        }
     }
 
     for(int i = 0; i < stoi(playerCount); i++){

@@ -1,0 +1,8 @@
+Aura Gained|0|0|800
+Training Fatigue|0|3|-500
+Hidden Oasis|1|0|600
+Scorching Weather conditions|1|4|-400
+Hidden Trap|1|5|-500
+Attacked by Lions|1|1|-500
+Darkness of Night|2|2|-400
+Gift of Sunshine|2|0|400

@@ -13,6 +13,8 @@ int main() {
     string tempChoice;
     string pathChoice;
     string playerCount;
+    string characterLine;
+    string advisorLine;
     
     int playerCountCounter = 0;
     int playerChoiceCounter = 0;
@@ -26,22 +28,21 @@ int main() {
     vector<Player> characterList;
     vector<string> chosenCharacters;
     
-    ifstream file("characters.txt");
-    if (!file.is_open()){
+    ifstream characterFile("characters.txt");
+    if (!characterFile.is_open()){
         cout << "Error could not open file 'characters.txt'" << endl;
         return -1;
     }
-    string line;
 
-    getline(file, line);
+    getline(characterFile, characterLine);
     
-    while (getline(file, line)){
-        if (line.empty()){
+    while (getline(characterFile, characterLine)){
+        if (characterLine.empty()){
             continue;
         }
 
         string player[6];
-        lib.split(line, '|', player, 6);
+        lib.split(characterLine, '|', player, 6);
 
         Player currentPlayer(player[0], stoi(player[2]), stoi(player[3]), stoi(player[4]));
         currentPlayer.setAge(stoi(player[1]));

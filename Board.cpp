@@ -1,4 +1,6 @@
 #include "Board.h"
+#include "Player.h"
+#include "Library.h"
 #define RED "\033[48;2;230;10;10m"
 #define GREEN "\033[48;2;34;139;34m"  /* Grassy Green (34,139,34) */
 #define BLUE "\033[48;2;10;10;230m"
@@ -8,6 +10,8 @@
 #define ORANGE "\033[48;2;230;115;0m" /* Orange (230,115,0) */
 #define GREY "\033[48;2;128;128;128m" /* Grey (128,128,128) */
 #define RESET "\033[0m"
+
+
 
 void Board::initializeBoard(int player_count, vector<bool> board_type)
 {
@@ -172,6 +176,7 @@ Board::Board(int player_count, vector<bool> board_type)
         _player_count = player_count;
     }
 
+    
 
 
     // Initialize player position
@@ -294,11 +299,16 @@ void Board::displayBoard(vector<bool> board_type)
     
 }
 
-bool Board::movePlayer(int player_index, bool board_type)
+
+bool Board::movePlayer(int player_index, bool board_type, vector<Player> playerData)
 {
     // Increment player position
-    _player_position[player_index]++;
-    playerEvent(player_index, board_type);
+    Library lib;
+
+    int moves = lib.runSpinner(player_index);
+
+    _player_position[player_index] + moves;
+    playerEvent(player_index, board_type, playerData);
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {
         // Player reached last tile
@@ -307,22 +317,32 @@ bool Board::movePlayer(int player_index, bool board_type)
     return false;
 }
 
-void Board::playerEvent(int player_index, bool board_type)
+void Board::playerEvent(int player_index, bool board_type, vector<Player> playerData)
 {
     char tile = _tiles[board_type][_player_position[player_index]].color;
     switch(tile)
     {
         case 'B':
-           cout << "Player " << player_index << ", you've found a peaceful oasis! This grants the player an extra turn to keep moving forward—take a deep breath and relax; you also gain 200 Stamina, Strength, and Wisdom Points." << endl << endl;
-           break;
+            cout << "Player " << player_index << ", you've found a peaceful oasis! This grants the player an extra turn to keep moving forward—take a deep breath and relax; you also gain 200 Stamina, Strength, and Wisdom Points." << endl << endl;
+            playerData[player_index].addStamina(200);
+            playerData[player_index].addStrength(200);
+            playerData[player_index].addWisdom(200);
+            break;
         case 'P':
             cout << "Player " << player_index << ", welcome to the land of enrichment - when landing on this tile, your Stamina, Strength, and Wisdom Points increase by 300, and you get to choose an advisor from the available list of advisors. If you already have an advisor, you can switch your advisor out for a different one from the list or keep your original advisor. Don’t forget - an advisor can protect you from random events that negatively impact your Pride Points." << endl << endl;
+            playerData[player_index].addStamina(300);
+            playerData[player_index].addStrength(300);
+            playerData[player_index].addWisdom(300);
             break;
         case 'R':
             cout << "Player " << player_index << ", uh-oh, you've stumbled into the Graveyard! This forces the player to move back 10 tiles and lose 100 Stamina, Strength, and Wisdom Points." << endl << endl;
+            playerData[player_index].addStamina(-100);
+            playerData[player_index].addStrength(-100);
+            playerData[player_index].addWisdom(-100);
             break;
         case 'N':
             cout << "Player " << player_index << ", the Hyenas are on the prowl! They drag you back to where you were last, and the journey comes at a cost. This returns the player to their previous position. In addition, the player's Stamina Points decrease by 300 Points." << endl << endl;
+            playerData[player_index].addStamina(-300);
             break;
         case 'U':
             cout << "Player " << player_index << ", time for a test of wits! Land here, and you'll face a riddle randomly pulled from the riddles.txt file. Answer correctly, and you'll earn a boost of 500 Points to your Wisdom Trait—your cleverness pays off!" << endl << endl;

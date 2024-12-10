@@ -12,21 +12,27 @@
 void Board::initializeBoard(int player_count, vector<bool> board_type)
 {
     // Seed random number generator in your main function once
+
+    srand(time(0));
+    vector<int> pride;
+    vector<int> cub;
+
     for (int i = 0; i < player_count; i++)
     {
         if(board_type[i] == 0){
-            initializePrideLands(i);
+            pride.push_back(i+1);
         }else{
-            initializeCubTraining(i);
+            cub.push_back(i+1);
         }
-// This ensures each lane has a unique tile distribution
     }
+    initializePrideLands(pride);
+    initializeCubTraining(cub);
 }
 
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time()
 
-void Board::initializePrideLands(int player_index)
+void Board::initializePrideLands(vector<int> pride)
 {
     Tile temp;
     int green_count = 0;
@@ -80,11 +86,11 @@ void Board::initializePrideLands(int player_index)
                 }
         }
         // Assign the tile to the board for the specified lane
-        _tiles[player_index][i] = temp;
+        _tiles[0][i] = temp;
     }
 }
 
-void Board::initializeCubTraining(int player_index)
+void Board::initializeCubTraining(vector<int> cub)
 {
     Tile temp;
     int green_count = 0;
@@ -138,7 +144,7 @@ void Board::initializeCubTraining(int player_index)
                 }
         }
         // Assign the tile to the board for the specified lane
-        _tiles[player_index][i] = temp;
+        _tiles[1][i] = temp;
     }
 }
 
@@ -146,13 +152,13 @@ void Board::initializeCubTraining(int player_index)
 Board::Board()
 {
     _player_count = 1;
-    _board_type = {0};
+    _pride = {0};
 
     // Initialize player position
     _player_position[0] = 0;
 
     // Initialize tiles
-    initializePrideLands(_player_position[0]);
+    initializePrideLands(_pride);
 }
 
 Board::Board(int player_count, vector<bool> board_type)
@@ -169,14 +175,14 @@ Board::Board(int player_count, vector<bool> board_type)
 
 
     // Initialize player position
-    for (int i = 0; i < _player_count; i++)
+    for (int i = 0; i <= _player_count; i++)
     {
         _player_position[i] = 0;
     }
 
     // Initialize tiles
 
-    initializeBoard(player_count, board_type);
+    initializeBoard(_player_count, board_type);
 }
 
 bool Board::isPlayerOnTile(int player_index, int pos)
@@ -188,12 +194,22 @@ bool Board::isPlayerOnTile(int player_index, int pos)
     return false;
 }
 
-void Board::displayTile(int player_index, int pos, bool board_type)
+void Board::displayTile(vector<int> player_indexs, int pos, bool board_type)
 {
     // string space = "                                       ";
     string color = "";
-    int player = isPlayerOnTile(player_index, pos);
-
+    vector<bool> players;
+    vector<int> onPos;
+    int temp;
+    for(int i = 0; i < player_indexs.size(); i++){
+        temp = isPlayerOnTile(player_indexs[i], pos);
+        players.push_back(temp);
+    }
+    for(int i = 0; i < player_indexs.size(); i++){
+        if(players[i] == 1){
+            onPos.push_back(player_indexs[i]);
+        }
+    }
     // Template for displaying a tile: <line filler space> <color start> |<player symbol or blank space>| <reset color> <line filler space> <endl>
 
     // Determine color to display
@@ -230,35 +246,52 @@ void Board::displayTile(int player_index, int pos, bool board_type)
         color = GREY;
     }
 
-     if (player == true)
-    {
-        cout << color << "|" << (player_index + 1) << "|" << RESET;
+    if(onPos.size() > 0){
+        if(onPos.size() == 1){
+            cout << color << "|" << (onPos[0]) << "|" << RESET;
+        }
+        else{
+            cout << color << "|";
+            for(int i = 0; i < onPos.size(); i++){
+                cout << onPos[i];
+                if(i < onPos.size()-1){
+                    cout << "&";
+                }
+            }
+            cout << "|" << RESET;
+        }
+        
     }
-    else
-    {
+    else{
         cout << color << "| |" << RESET;
     }
 }
 
-void Board::displayTrack(int player_index, bool board_type)
+void Board::displayTrack(vector<int> player_indexs, bool board_type)
 {
     for (int i = 0; i < _BOARD_SIZE; i++)
     {
-        displayTile(player_index, i, board_type);
+        displayTile(player_indexs, i, board_type);
     }
     cout << endl;
 }
 
 void Board::displayBoard(vector<bool> board_type)
 {
-    int board_size = board_type.size();
-    for (int i = 0; i < board_size; i++)
-    {
-        displayTrack(i, board_type[i]);
-        if (i == 0) {
-            cout << endl;  // Add an extra line between the two lanes
+    vector<int> pride;
+    vector<int> cub;
+    for(int i = 0; i < board_type.size(); i++){
+        if(board_type[i] == 0){
+            pride.push_back(i+1);
+        }else{
+            cub.push_back(i+1);
         }
     }
+    displayTrack(pride, 0);
+    cout << endl;
+    displayTrack(cub, 1);
+    cout << endl;
+    
 }
 
 bool Board::movePlayer(int player_index, bool board_type)
@@ -280,19 +313,19 @@ void Board::playerEvent(int player_index, bool board_type)
     switch(tile)
     {
         case 'B':
-           cout << "Player " << player_index+1 << ", you've found a peaceful oasis! This grants the player an extra turn to keep moving forward—take a deep breath and relax; you also gain 200 Stamina, Strength, and Wisdom Points." << endl << endl;
+           cout << "Player " << player_index << ", you've found a peaceful oasis! This grants the player an extra turn to keep moving forward—take a deep breath and relax; you also gain 200 Stamina, Strength, and Wisdom Points." << endl << endl;
            break;
         case 'P':
-            cout << "Player " << player_index+1 << ", welcome to the land of enrichment - when landing on this tile, your Stamina, Strength, and Wisdom Points increase by 300, and you get to choose an advisor from the available list of advisors. If you already have an advisor, you can switch your advisor out for a different one from the list or keep your original advisor. Don’t forget - an advisor can protect you from random events that negatively impact your Pride Points." << endl << endl;
+            cout << "Player " << player_index << ", welcome to the land of enrichment - when landing on this tile, your Stamina, Strength, and Wisdom Points increase by 300, and you get to choose an advisor from the available list of advisors. If you already have an advisor, you can switch your advisor out for a different one from the list or keep your original advisor. Don’t forget - an advisor can protect you from random events that negatively impact your Pride Points." << endl << endl;
             break;
         case 'R':
-            cout << "Player " << player_index+1 << ", uh-oh, you've stumbled into the Graveyard! This forces the player to move back 10 tiles and lose 100 Stamina, Strength, and Wisdom Points." << endl << endl;
+            cout << "Player " << player_index << ", uh-oh, you've stumbled into the Graveyard! This forces the player to move back 10 tiles and lose 100 Stamina, Strength, and Wisdom Points." << endl << endl;
             break;
         case 'N':
-            cout << "Player " << player_index+1 << ", the Hyenas are on the prowl! They drag you back to where you were last, and the journey comes at a cost. This returns the player to their previous position. In addition, the player's Stamina Points decrease by 300 Points." << endl << endl;
+            cout << "Player " << player_index << ", the Hyenas are on the prowl! They drag you back to where you were last, and the journey comes at a cost. This returns the player to their previous position. In addition, the player's Stamina Points decrease by 300 Points." << endl << endl;
             break;
         case 'U':
-            cout << "Player " << player_index+1 << ", time for a test of wits! Land here, and you'll face a riddle randomly pulled from the riddles.txt file. Answer correctly, and you'll earn a boost of 500 Points to your Wisdom Trait—your cleverness pays off!" << endl << endl;
+            cout << "Player " << player_index << ", time for a test of wits! Land here, and you'll face a riddle randomly pulled from the riddles.txt file. Answer correctly, and you'll earn a boost of 500 Points to your Wisdom Trait—your cleverness pays off!" << endl << endl;
             break;
     }
 }

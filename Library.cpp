@@ -52,23 +52,18 @@ void Library::printMenu(){
     cout << endl;
 }
 
-int Library::runMenu(int choice){
-    choice = 0;
+int Library::runMenu(string choice){
+    choice = "0";
 
     while(true){
         printMenu();
         cin >> choice;
 
-        if(cin.fail()){
-            cin.clear();
-            
-        }
 
-        if(choice > 5 || choice < 1){
+        if(choice != "1" && choice != "2" && choice != "3" && choice != "4" && choice != "5"){
             cout << "Invalid input. Please select a valid option." << endl;
         }else{
-            return choice;
+            return stoi(choice);
         }
     }
 }
-

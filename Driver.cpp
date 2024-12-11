@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "Tile.h"
+#include "RandomEvents.h"
 #include "Library.h"
 #include "Player.h"
 #include <iostream>
@@ -15,6 +16,7 @@ int main() {
     string playerCount;
     string characterLine;
     string advisor[5];
+    string next;
     
     int playerCountCounter = 0;
     int playerChoiceCounter = 0;
@@ -23,6 +25,12 @@ int main() {
     int pathChoiceCounter = 0;
     int advisorChoiceCounter = 0;
     int actualPlayerCount;
+    int counter = 0;
+    int counter2 = 0;
+    int wonCount = 0;
+
+    RandomEvents randomEvents[8];
+    RandomEvents riddles[3];
 
     vector<bool> boardType;
     vector<string> playerName;
@@ -30,8 +38,8 @@ int main() {
     vector<Player> characterList;
     vector<string> chosenCharacters;
     vector<int> chosenAdvisor;
-    vector<int> randomEvents;
     vector<bool> endReached;
+    vector<int> playerPoints;
 
     ifstream cfile("characters.txt");
     if (!cfile.is_open()){
@@ -182,20 +190,40 @@ int main() {
     }
     string eventline;
 
-    getline(eventfile, eventline);
     
     while (getline(eventfile, eventline)){
         if (eventline.empty()){
             continue;
         }
+        string events[4];
+        lib.split(eventline, '|', events, 4);
+        
+        randomEvents[counter].setDescription(events[0]);
+        randomEvents[counter].setPathType(stoi(events[1]));
+        randomEvents[counter].setAdvisor(stoi(events[2]));
+        randomEvents[counter].setPridePoints(stoi(events[3]));
+        counter++;
+    }
 
-        string events[5];
-        lib.split(cline, '|', events, 5);
+    ifstream eventfile2("riddles.txt");
+    if (!eventfile2.is_open()){
+        cout << "Error could not open file 'random_events.txt'" << endl;
+        return -1;
+    }
+    string eventline2;
 
-        int pride_points = stoi(events[5]);
-        randomEvents.push_back(pride_points);
-        // maybe make another constructor
-        // create main menu
+    
+    while (getline(eventfile2, eventline2)){
+        if (eventline2.empty()){
+            continue;
+        }
+        string events2[2];
+        lib.split(eventline2, '|', events2, 2);
+        
+        riddles[counter2].setRiddleDescription(events2[0]);
+        riddles[counter2].setRiddleAnswer(events2[1]);
+        
+        counter2++;
     }
 
     bool wonGame = false;
@@ -207,7 +235,7 @@ int main() {
         bool turnEnd = false;
 
         while(!turnEnd){
-            int choice = lib.runMenu(0);
+            int choice = lib.runMenu("0");
 
             switch(choice){
                 case 1:
@@ -215,7 +243,7 @@ int main() {
                     cout << playerName[currentPlayer] << "'s Stamina: " << playerData[currentPlayer].getStamina() << endl;
                     cout << playerName[currentPlayer] << "'s Strength: " << playerData[currentPlayer].getStrength() << endl;
                     cout << playerName[currentPlayer] << "'s Wisdom: " << playerData[currentPlayer].getWisdom() << endl;
-                    cout << "Would you like to display your full stats? (Y/N)" << endl;
+                    cout << "Would you like to display your full stats? Press Y to display full stats, press anything else to go back to main menu." << endl;
                     char statsChoice1;
                     cin >> statsChoice1;
                     if (toupper(statsChoice1) == 'Y') {
@@ -225,7 +253,7 @@ int main() {
                 case 2:
                     cout << playerName[currentPlayer] << "'s Character: " << playerData[currentPlayer].getName() << endl;
                     cout << playerName[currentPlayer] << "'s Age: " << playerData[currentPlayer].getAge() << endl;
-                    cout << "Would you like to display your full stats? (Y/N)" << endl;
+                    cout << "Would you like to display your full stats? Press Y to display full stats, press anything else to go back to main menu." << endl;
                     char statsChoice2;
                     cin >> statsChoice2;
                     if (toupper(statsChoice2) == 'Y') {
@@ -260,38 +288,53 @@ int main() {
                             cout << playerName[currentPlayer] << " has Sarafina as their advisor." << endl;
                             cout << "Special Ability: Super Speed (the ability to run 4x faster than the maximum speed of lions)" << endl;
                             break;
-                    }
-                    if(chosenAdvisor[currentPlayer] == 0){
-                        continue;
-                    }else{
-                        cout << "Would you like to change your advisor? (Y/N)" << endl;
-                        char choice;
-                        cin >> choice;
-                    }
-
-                    if (toupper(choice) == 'Y') {
-                        cout << "Available advisors:" << endl;
-                        cout << "1. Rafiki - Invisibility" << endl;
-                        cout << "2. Nala - Night Vision" << endl;
-                        cout << "3. Sarabi - Energy Manipulation" << endl;
-                        cout << "4. Zazu - Weather Control" << endl;
-                        cout << "5. Sarafina - Super Speed" << endl;
-                        cout << "Enter your choice (1-5): ";
-
-                        int advisorChoice;
-                        cin >> advisorChoice;
-
-                        if (advisorChoice >= 1 && advisorChoice <= 5) {
-                            chosenAdvisor[currentPlayer] = advisorChoice;
-                            cout << "You have chosen " << advisor << " successfully!" << endl;
-                        } else {
-                            cout << "Invalid choice. Advisor not changed." << endl;
                         }
-                    }
-                    break;
+                        char choice;
+                        if(chosenAdvisor[currentPlayer] == 0){
+                            cout << "Would you to like to choose an advisor? Press Y to choose an advisor, press anything else to go back to main menu." << endl;
+                            cin >> choice;
+
+                        }else{
+                            cout << "Would you like to change your advisor? Press Y to choose an advisor, press anything else to go back to main menu." << endl;
+                            cin >> choice;
+                        }
+
+                        if (toupper(choice) == 'Y') {
+                            if(playerData[currentPlayer].getTilePosition() == 0 || playerData[currentPlayer].getTilePosition() == 2){
+                                cout << "Not on counseling tile. You can only choose or change an advisor on the counseling tile." << endl;
+                                break;
+                            }else{
+                                cout << "Available advisors:" << endl;
+                                cout << "1. Rafiki - Invisibility" << endl;
+                                cout << "2. Nala - Night Vision" << endl;
+                                cout << "3. Sarabi - Energy Manipulation" << endl;
+                                cout << "4. Zazu - Weather Control" << endl;
+                                cout << "5. Sarafina - Super Speed" << endl;
+                                cout << "Enter your choice (1-5): ";
+                                
+
+                                int advisorChoice;
+                                cin >> advisorChoice;
+
+                                if (advisorChoice >= 1 && advisorChoice <= 5) {
+                                    chosenAdvisor[currentPlayer] = advisorChoice;
+                                    cout << "You have chosen " << advisor << " successfully!" << endl;
+                                } else {
+                                    cout << "Invalid choice. Advisor not changed." << endl;
+                                }
+                            }
+                        }
+                        break;
                 case 5:
-                    board.movePlayer(currentPlayer, boardType[currentPlayer], playerData);
+                    playerData[currentPlayer].setTilePosition(0);
+                    board.movePlayer(currentPlayer, boardType[currentPlayer], playerData, randomEvents, chosenAdvisor, riddles);
                     board.displayBoard(boardType);
+                    cout << "Press anything and click enter to go to the next player's turn" << endl;
+                    cin >> next;
+                    if(playerData[currentPlayer].getTilePosition() == 2){
+                        playerData[currentPlayer].setTilePosition(0);
+                        continue;
+                    }
                     turnEnd = true;
                     break;
                 default:
@@ -299,12 +342,59 @@ int main() {
                     break;
             }
         }
-        if (!wonGame){
-            currentPlayer = (currentPlayer + 1) % stoi(playerCount);
-        }else{
-            cout << playerData[currentPlayer].getName() << " has reached the end!" << endl;
-            currentPlayer = (currentPlayer + 1) % stoi(playerCount);
+        //cycles players turns and skips over players that have already reached the end
+        if (board.getPlayerPosition(currentPlayer) == 51){
+            cout << playerName[currentPlayer] << " has reached the end!" << endl;
+            wonCount++;
+            endReached[currentPlayer] = true;
+        }
+        
+        if(wonCount == actualPlayerCount){
+            turnEnd = true;
+            wonGame = true;
+            break;
+        }
+
+        do{
+            currentPlayer = (currentPlayer + 1) % actualPlayerCount;
+        }while(endReached[currentPlayer] == true);
+    }
+
+    for(int i = 0; i < actualPlayerCount; i++){
+        int points = board.evaluatePlayer(currentPlayer, playerData);
+        playerPoints.push_back(points);
+    }
+
+    //selection sort player points
+    int n = playerPoints.size();
+    for(int i = 0; i < n - 1; i++){
+        int min = i;
+        for(int j = i + 1; j < n; j++){
+            if(playerPoints[j] < playerPoints[min]){
+                min = j;
+            }
+        }
+        if(min != i){
+            int temp = playerPoints[i];
+            playerPoints[i] = playerPoints[min];
+            playerPoints[min] = temp;
         }
     }
+
+    //prints sorted player points
+    cout << "Leaderboard:" << endl;
+    for(int i = actualPlayerCount - 1; i >= 0; i++){
+        cout << i + 1 << " - " << playerName[i] << ": " << playerPoints[i] << endl;
+    }
+    cout << endl;
+
+    cout << endl << "Winner(s):" << endl;
+    cout << 1 << " - " << playerName[actualPlayerCount - 1] << ": " << playerPoints[actualPlayerCount - 1] << endl;
+    for(int i = actualPlayerCount - 2, j = 1; i >= 0; i--, j++){
+        if(playerPoints[i] == playerPoints[actualPlayerCount - 1]){
+            cout << j + 1 << " - " << playerName[i] << ": " << playerPoints[i] << endl;
+        }
+    }
+
     return 0;
 }

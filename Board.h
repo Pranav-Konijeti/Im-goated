@@ -12,7 +12,6 @@ private:
     static const int _MAX_PLAYERS = 5;
     int _player_count;
     vector<int> _pride;
-    vector<int> _cub;
     int _player_position[_MAX_PLAYERS];
     void displayTile(vector<int> player_indexs, int pos, bool board_type);
     void initializeCubTraining(vector<int> cub);

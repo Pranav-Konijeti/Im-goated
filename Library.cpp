@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include "Library.h"
+#include "Player.h"
+#include "Board.h"
 
 int Library::split(string input_string, char separator, string arr[], const int ARR_SIZE){
     int length = input_string.length();
@@ -38,3 +40,35 @@ int Library::runSpinner(int player_index){
     int rNum = rand() % 6 + 1;
     return rNum;
 }
+
+void Library::printMenu(){
+    cout << endl << "Main Menu" << endl;
+    cout << "Select an option to continue" << endl << endl;
+    cout << "1. Check Player Progress: Review Pride Point and Leadership Trait stats." << endl;
+    cout << "2. Review Character: Check your character name and age." << endl;
+    cout << "3. Check Position: Display board to view current position." << endl;
+    cout << "4. Review your Advisor: Check who your current advisor is on the game." << endl;
+    cout << "5. Move Forward: For each player's turn, access this option to spin the virtual spinner." << endl;
+    cout << endl;
+}
+
+int Library::runMenu(int choice){
+    choice = 0;
+
+    while(true){
+        printMenu();
+        cin >> choice;
+
+        if(cin.fail()){
+            cin.clear();
+            
+        }
+
+        if(choice > 5 || choice < 1){
+            cout << "Invalid input. Please select a valid option." << endl;
+        }else{
+            return choice;
+        }
+    }
+}
+

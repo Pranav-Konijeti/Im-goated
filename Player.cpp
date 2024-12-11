@@ -83,6 +83,25 @@ void Player::setAge(int age){
     _age = age;
 }
 
+void Player::addStrength(int strength){
+    _strength += strength;
+}
+
+void Player::addStamina(int stamina){
+    _stamina += stamina;
+
+}
+
+void Player::addWisdom(int wisdom){
+    _wisdom += wisdom;
+
+}
+
+void Player::addPridePoints(int pride_points){
+    _pride_points += pride_points;
+}
+
+
 //Other
 void Player::trainCub(int strength, int stamina, int wisdom){
     _pride_points -= 5000;
@@ -91,11 +110,11 @@ void Player::trainCub(int strength, int stamina, int wisdom){
     _wisdom += wisdom;
 }
 
-void Player::toPrideLands(){
+void Player::toPrideLands(int strength, int stamina, int wisdom){
     _pride_points += 5000;
-    _strength -= 2000;
-    _wisdom -= 2000;
-    _stamina -= 2000;
+    _strength += strength;
+    _wisdom += stamina;
+    _stamina += wisdom;
 }
 
 void Player::printStats(){

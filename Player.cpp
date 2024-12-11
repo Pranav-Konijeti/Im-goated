@@ -103,7 +103,7 @@ void Player::addPridePoints(int pride_points){
 
 
 //Other
-void Player::trainCub(int strength, int stamina, int wisdom){
+void Player::toCubTraining(int strength, int stamina, int wisdom){
     _pride_points -= 5000;
     _strength += strength;
     _stamina += stamina;

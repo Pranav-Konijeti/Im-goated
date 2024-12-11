@@ -38,7 +38,7 @@ public:
     void addPridePoints(int pride_points);
 
     //Other
-    void trainCub(int strength, int stamina, int wisdom);
+    void toCubTraining(int strength, int stamina, int wisdom);
     void toPrideLands(int strength, int stamina, int wisdom);
     void printStats();
 };

@@ -193,6 +193,9 @@ Board::Board(int player_count, vector<bool> board_type)
 
 bool Board::isPlayerOnTile(int player_index, int pos)
 {
+    if(_player_position[player_index] > 51){
+        _player_position[player_index] = 51;
+    }
     if (_player_position[player_index] == pos)
     {
         return true;
@@ -320,6 +323,9 @@ bool Board::movePlayer(int player_index, bool board_type, vector<Player> playerD
         _hyenaTile = 0;
         _player_position[player_index + 1] -= moves;
     }
+    if(_player_position[player_index] > 51){
+        _player_position[player_index] = 51;
+    }
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {
         // Player reached last tile
@@ -415,7 +421,7 @@ int Board::getPlayerPosition(int player_index) const
 {
     if (player_index >= 0 && player_index <= _player_count)
     {
-        return _player_position[player_index];
+        return _player_position[player_index + 1];
     }
     return -1;
 }

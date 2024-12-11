@@ -383,8 +383,8 @@ int main() {
 
     //prints sorted player points
     cout << "Leaderboard:" << endl;
-    for(int i = actualPlayerCount - 1; i >= 0; i++){
-        cout << i + 1 << " - " << playerName[i] << ": " << playerPoints[i] << endl;
+    for(int i = actualPlayerCount - 1, j = 0; i >= 0; i++, j++){
+        cout << j + 1 << " - " << playerName[i] << ": " << playerPoints[i] << endl;
     }
     cout << endl;
 

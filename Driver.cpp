@@ -8,7 +8,7 @@
 
 int main() {
     Library lib;
-
+    
     string tempName;
     string tempChoice;
     string pathChoice;
@@ -22,13 +22,13 @@ int main() {
     int pathChoiceInteger;
     int pathChoiceCounter = 0;
     int advisorChoiceCounter = 0;
+    int actualPlayerCount;
 
-    vector<int> boardType;
+    vector<bool> boardType;
     vector<string> playerName;
     vector<Player> playerData;
     vector<Player> characterList;
     vector<string> chosenCharacters;
-
     
     ifstream characterFile("characters.txt");
     if (!characterFile.is_open()){
@@ -68,6 +68,7 @@ int main() {
 
         playerCountCounter++;
     } while(playerCount != "2" && playerCount != "3" && playerCount != "4" && playerCount != "5");
+    actualPlayerCount = stoi(playerCount);
     
     for(int i = 0; i < stoi(playerCount); i++){
         cout << "Player " << i + 1 << ", Please enter your name: ";

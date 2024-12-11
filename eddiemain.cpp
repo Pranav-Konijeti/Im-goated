@@ -8,7 +8,6 @@
 
 int main() {
     Library lib;
-    Board board;
 
     string tempName;
     string tempChoice;
@@ -23,14 +22,18 @@ int main() {
     int pathChoiceInteger;
     int pathChoiceCounter = 0;
     int advisorChoiceCounter = 0;
+    int actualPlayerCount;
+    int wonCount = 0;
 
-    vector<int> boardType;
+    vector<bool> boardType;
     vector<string> playerName;
     vector<Player> playerData;
     vector<Player> characterList;
     vector<string> chosenCharacters;
     vector<int> chosenAdvisor;
     vector<int> randomEvents;
+    vector<bool> endReached;
+    vector<int> playerPoints;
 
     ifstream cfile("characters.txt");
     if (!cfile.is_open()){
@@ -71,11 +74,13 @@ int main() {
 
         playerCountCounter++;
     } while(playerCount != "2" && playerCount != "3" && playerCount != "4" && playerCount != "5");
+    actualPlayerCount = stoi(playerCount);
     
-    for(int i = 0; i < stoi(playerCount); i++){
+    for(int i = 0; i < actualPlayerCount; i++){
         cout << "Player " << i + 1 << ", Please enter your name: ";
         getline(cin, tempName);
         playerName.push_back(tempName);
+        endReached.push_back(false);
 
         cout << endl << "Thank you, " << tempName << ". Choose your character from the list above." << endl;
         do{
@@ -169,6 +174,9 @@ int main() {
         advisorChoiceCounter = 0;
     }
 
+    Board board(actualPlayerCount, boardType);
+    board.displayBoard(boardType);
+
     ifstream eventfile("random_events.txt");
     if (!eventfile.is_open()){
         cout << "Error could not open file 'random_events.txt'" << endl;
@@ -183,17 +191,16 @@ int main() {
             continue;
         }
 
-        string events[5];
-        lib.split(cline, '|', events, 5);
+        string events[4];
+        lib.split(cline, '|', events, 4);
 
-        int pride_points = stoi(events[5]);
+        int pride_points = stoi(events[3]);
         randomEvents.push_back(pride_points);
-        // maybe make another constructor
-        // create main menu
     }
 
     bool wonGame = false;
     int currentPlayer = 0;
+    string advisorChoice;
 
     while(!wonGame){
         cout << "It is now Player " << currentPlayer + 1 << "'s turn." << endl;
@@ -208,13 +215,25 @@ int main() {
                     cout << playerName[currentPlayer] << "'s Stamina: " << playerData[currentPlayer].getStamina() << endl;
                     cout << playerName[currentPlayer] << "'s Strength: " << playerData[currentPlayer].getStrength() << endl;
                     cout << playerName[currentPlayer] << "'s Wisdom: " << playerData[currentPlayer].getWisdom() << endl;
+                    cout << "Would you like to display your full stats? (Y/N)" << endl;
+                    char statsChoice1;
+                    cin >> statsChoice1;
+                    if (toupper(statsChoice1) == 'Y') {
+                        playerData[currentPlayer].printStats();
+                    }
                     break;
                 case 2:
                     cout << playerName[currentPlayer] << "'s Character: " << playerData[currentPlayer].getName() << endl;
                     cout << playerName[currentPlayer] << "'s Age: " << playerData[currentPlayer].getAge() << endl;
+                    cout << "Would you like to display your full stats? (Y/N)" << endl;
+                    char statsChoice2;
+                    cin >> statsChoice2;
+                    if (toupper(statsChoice2) == 'Y') {
+                        playerData[currentPlayer].printStats();
+                    }
                     break;
                 case 3:
-                    // display board function
+                    board.displayBoard(boardType);
                     break;
                 case 4:
                     switch(chosenAdvisor[currentPlayer]){
@@ -224,47 +243,55 @@ int main() {
                         case 1:
                             cout << playerName[currentPlayer] << " has Rafiki as their advisor." << endl;
                             cout << "Special Ability: Invisibility (the ability to become un-seen)" << endl;
-                            continue;
+                            break;
                         case 2:
                             cout << playerName[currentPlayer] << " has Nala as their advisor." << endl;
                             cout << "Special Ability: Night Vision (the ability to see clearly in darkness)" << endl;
-                            continue;
+                            break;
                         case 3:
                             cout << playerName[currentPlayer] << " has Sarabi as their advisor." << endl;
                             cout << "Special Ability: Energy Manipulation (the ability to shape and control the properties of energy)" << endl;
-                            continue;
+                            break;
                         case 4:
                             cout << playerName[currentPlayer] << " has Zazu as their advisor." << endl;
                             cout << "Special Ability: Weather Control (the ability to influence and manipulate weather patterns)" << endl;
-                            continue;
+                            break;
                         case 5:
                             cout << playerName[currentPlayer] << " has Sarafina as their advisor." << endl;
                             cout << "Special Ability: Super Speed (the ability to run 4x faster than the maximum speed of lions)" << endl;
-                            continue;
-                    }
-                    cout << "Would you like to change your advisor? (Y/N)" << endl;
-                    char choice;
-                    cin >> choice;
-                    bool change = false;
-                    while(!change){
-                        switch(choice){
-                        case 'Y':
-                            cout << "1. Rafiki - Invisibility (the ability to become un-seen)" << endl;
-                            cout << "2. Nala - Night Vision (the ability to see clearly in darkness)" << endl;
-                            cout << "3. Sarabi - Energy Manipulation (the ability to shape and control the properties of energy)" << endl;
-                            cout << "4. Zazu - Weather Control (the ability to influence and manipulate weather patterns)" << endl;
-                            cout << "5. Sarafina - Super Speed (the ability to run 4x faster than the maximum speed of lions)" << endl;
-                            cout << "Who would you like to change your advisor to?" << endl;
-                        case 'N':
-                            change = true;
                             break;
-                        default:
-                            cout << "Invalid choice. Please enter a valid input." << endl;
-                            continue;
+                    }
+                        if(chosenAdvisor[currentPlayer] == 0){
+                            cout << "Would you like to choose an advisor? (Y/N)" << endl;
+                        }else{
+                            cout << "Would you like to change your advisor? (Y/N)" << endl;
+                            char choice;
+                            cin >> choice;
                         }
+
+                        if (toupper(choice) == 'Y') {
+                            cout << "Available advisors:" << endl;
+                            cout << "1. Rafiki - Invisibility" << endl;
+                            cout << "2. Nala - Night Vision" << endl;
+                            cout << "3. Sarabi - Energy Manipulation" << endl;
+                            cout << "4. Zazu - Weather Control" << endl;
+                            cout << "5. Sarafina - Super Speed" << endl;
+                            cout << "Enter your choice (1-5): ";
+
+                            int advisorChoice;
+                            cin >> advisorChoice;
+
+                            if (advisorChoice >= 1 && advisorChoice <= 5) {
+                                chosenAdvisor[currentPlayer] = advisorChoice;
+                                cout << "You have chosen " << advisor << " successfully!" << endl;
+                            } else {
+                                cout << "Invalid choice. Advisor not changed." << endl;
+                            }
                     }
                     break;
                 case 5:
+                    board.movePlayer(currentPlayer, boardType[currentPlayer], playerData);
+                    board.displayBoard(boardType);
                     turnEnd = true;
                     break;
                 default:
@@ -272,13 +299,56 @@ int main() {
                     break;
             }
         }
-        if (!wonGame){
-            currentPlayer = (currentPlayer + 1) % stoi(playerCount);
-        }else{
-            cout << playerData[currentPlayer].getName() << " has reached the end!" << endl;
-            currentPlayer = (currentPlayer + 1) % stoi(playerCount);
+
+        //cycles players turns and skips over players that have already reached the end
+        if (board.getPlayerPosition(currentPlayer) == 51){
+            cout << playerName[currentPlayer] << " has reached the end!" << endl;
+            wonCount++;
+            endReached[currentPlayer] = true;
+        }
+        
+        do{
+            currentPlayer = (currentPlayer + 1) % actualPlayerCount;
+        }while(endReached[currentPlayer] == true);
+
+        if(wonCount == actualPlayerCount){
+            turnEnd = true;
+            wonGame = true;
+            break;
         }
     }
+
+    if(wonGame == true){
+        cout << "massive balls" << endl;
+    }
+
+    currentPlayer = 0;
+    for(int i = 0; i < actualPlayerCount; i++){
+        int points = board.evaluatePlayer(currentPlayer, playerData);
+        playerPoints.push_back(points);
+    }
+
+    //selection sort player points
+    int n = playerPoints.size();
+    for(int i = 0; i < n - 1; i++){
+        int min = i;
+        for(int j = i + 1; j < n; j++){
+            if(playerPoints[j] < playerPoints[min]){
+                min = j;
+            }
+        }
+        if(min != i){
+            int temp = playerPoints[i];
+            playerPoints[i] = playerPoints[min];
+            playerPoints[min] = temp;
+        }
+    }
+
+    //prints sorted player poits
+    for(int i = 0; i < actualPlayerCount; i++){
+        cout << playerPoints[i] << " ";
+    }
+    cout << endl;
 
     return 0;
 }

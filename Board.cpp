@@ -201,20 +201,22 @@ bool Board::isPlayerOnTile(int player_index, int pos)
 
 void Board::displayTile(vector<int> player_indexs, int pos, bool board_type)
 {
+    int playerIndexSize = player_indexs.size();
     // string space = "                                       ";
     string color = "";
     vector<bool> players;
     vector<int> onPos;
     int temp;
-    for(int i = 0; i < player_indexs.size(); i++){
+    for(int i = 0; i < playerIndexSize; i++){
         temp = isPlayerOnTile(player_indexs[i], pos);
         players.push_back(temp);
     }
-    for(int i = 0; i < player_indexs.size(); i++){
+    for(int i = 0; i < playerIndexSize; i++){
         if(players[i] == 1){
             onPos.push_back(player_indexs[i]);
         }
     }
+    int onPosSize = onPos.size();
     // Template for displaying a tile: <line filler space> <color start> |<player symbol or blank space>| <reset color> <line filler space> <endl>
 
     // Determine color to display
@@ -251,15 +253,15 @@ void Board::displayTile(vector<int> player_indexs, int pos, bool board_type)
         color = GREY;
     }
 
-    if(onPos.size() > 0){
-        if(onPos.size() == 1){
+    if(onPosSize > 0){
+        if(onPosSize == 1){
             cout << color << "|" << (onPos[0]) << "|" << RESET;
         }
         else{
             cout << color << "|";
-            for(int i = 0; i < onPos.size(); i++){
+            for(int i = 0; i < onPosSize; i++){
                 cout << onPos[i];
-                if(i < onPos.size()-1){
+                if(i < onPosSize-1){
                     cout << "&";
                 }
             }
@@ -283,9 +285,10 @@ void Board::displayTrack(vector<int> player_indexs, bool board_type)
 
 void Board::displayBoard(vector<bool> board_type)
 {
+    int boardTypeSize = board_type.size();
     vector<int> pride;
     vector<int> cub;
-    for(int i = 0; i < board_type.size(); i++){
+    for(int i = 0; i < boardTypeSize; i++){
         if(board_type[i] == 0){
             pride.push_back(i+1);
         }else{
@@ -307,8 +310,10 @@ bool Board::movePlayer(int player_index, bool board_type, vector<Player> playerD
 
     int moves = lib.runSpinner(player_index);
 
-    _player_position[player_index] + moves;
-    playerEvent(player_index, board_type, playerData);
+    cout << "You spun a " << moves << "!" << endl;
+
+    _player_position[player_index + 1] += moves;
+    playerEvent(player_index + 1, board_type, playerData);
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {
         // Player reached last tile

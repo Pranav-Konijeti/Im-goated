@@ -7,10 +7,12 @@ Player::Player(){
     _stamina = 100;
     _strength = 100;
     _wisdom = 100;
+    _pos = 0;
 }
 
 Player::Player(string name, int strength, int stamina, int wisdom){
     _name = name;
+    _pos = 0;
 
     if(strength < 100 || strength > 1000){
         _strength = 100;
@@ -56,6 +58,11 @@ int Player::getAge(){
     return _age;
 }
 
+int Player::getTilePosition(){
+    return _pos;
+}
+
+
 //Setters
 void Player::setName(string name){
     _name = name;
@@ -99,6 +106,10 @@ void Player::addWisdom(int wisdom){
 
 void Player::addPridePoints(int pride_points){
     _pride_points += pride_points;
+}
+
+void Player::setTilePosition(int pos){
+    _pos = pos;
 }
 
 

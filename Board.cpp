@@ -1,3 +1,5 @@
+// Worked with Eddie Chiu
+
 #include "Board.h"
 #include "Player.h"
 #include "RandomEvents.h"
@@ -73,7 +75,7 @@ void Board::initializePrideLands(vector<int> pride)
                     }else if(color_chance < 75){
                         temp.color = 'B'; //oasis 5%
                     }else{
-                        temp.color = 'P'; //challenge 25%
+                        temp.color = 'U'; //challenge 25%
                     }
                 }else{
                     int color_chance = rand() % 100;
@@ -86,7 +88,7 @@ void Board::initializePrideLands(vector<int> pride)
                     }else if(color_chance < 75){
                         temp.color = 'B'; //oasis 25%
                     }else{
-                        temp.color = 'P'; //challenge 25%
+                        temp.color = 'U'; //challenge 25%
                     }
                 }
         }
@@ -125,26 +127,26 @@ void Board::initializeCubTraining(vector<int> cub)
                     if(color_chance < 20){
                         temp.color = 'R'; //graveyard 20%
                     }else if(color_chance < 40){
-                        temp.color = 'B'; //hyena 20%
+                        temp.color = 'N'; //hyena 20%
                     }else if(color_chance < 55){
                         temp.color = 'P'; //advisor 15%
                     }else if(color_chance < 80){
                         temp.color = 'B'; //oasis 25%
                     }else{
-                        temp.color = 'P'; //challenge 20%
+                        temp.color = 'U'; //challenge 20%
                     }
                 }else{
                     int color_chance = rand() % 100;
                     if(color_chance < 20){
                         temp.color = 'R'; //graveyard 20%
                     }else if(color_chance < 40){
-                        temp.color = 'B'; //hyena 20%
+                        temp.color = 'N'; //hyena 20%
                     }else if(color_chance < 55){
                         temp.color = 'P'; //advisor 15%
                     }else if(color_chance < 70){
                         temp.color = 'B'; //oasis 15%
                     }else{
-                        temp.color = 'P'; //challenge 30%
+                        temp.color = 'U'; //challenge 30%
                     }
                 }
         }
@@ -307,7 +309,7 @@ void Board::displayBoard(vector<bool> board_type)
 }
 
 
-bool Board::movePlayer(int player_index, bool board_type, vector<Player> playerData, RandomEvents randomEvents[8], vector<int> chosenAdvisor, RandomEvents riddles[3])
+bool Board::movePlayer(int player_index, bool board_type, Player playerData[5], RandomEvents randomEvents[8], int chosenAdvisor[6], RandomEvents riddles[3])
 {
     playerData[player_index].setTilePosition(0);
     // Increment player position
@@ -317,14 +319,15 @@ bool Board::movePlayer(int player_index, bool board_type, vector<Player> playerD
 
     cout << "You spun a " << moves << "!" << endl;
 
-    _player_position[player_index + 1] += moves;
-    playerEvent(player_index + 1, board_type, playerData, randomEvents, chosenAdvisor, riddles);
+    _player_position[player_index+1] += moves;
+    playerEvent(player_index, board_type, playerData, randomEvents, chosenAdvisor, riddles);
     if(_hyenaTile == 1){
         _hyenaTile = 0;
-        _player_position[player_index + 1] -= moves;
+        _player_position[player_index+1] -= moves;
     }
     if(_player_position[player_index] > 51){
         _player_position[player_index] = 51;
+        return true;
     }
     if (_player_position[player_index] == _BOARD_SIZE - 1)
     {
@@ -334,9 +337,9 @@ bool Board::movePlayer(int player_index, bool board_type, vector<Player> playerD
     return false;
 }
 
-void Board::playerEvent(int player_index, bool board_type, vector<Player> playerData, RandomEvents randomEvents[8], vector<int> chosenAdvisor, RandomEvents riddles[3])
+void Board::playerEvent(int player_index, bool board_type, Player playerData[5], RandomEvents randomEvents[8], int chosenAdvisor[6], RandomEvents riddles[3])
 {
-    char tile = _tiles[board_type][_player_position[player_index]].color;
+    char tile = _tiles[board_type][_player_position[player_index+1]].color;
     switch(tile)
     {   case 'G':
             int greenEvent;
@@ -373,36 +376,36 @@ void Board::playerEvent(int player_index, bool board_type, vector<Player> player
             }
             break;
         case 'B':
-            cout << "Player " << player_index << ", you've found a peaceful oasis! This grants the player an extra turn to keep moving forward—take a deep breath and relax; you also gain 200 Stamina, Strength, and Wisdom Points." << endl << endl;
+            cout << "Player " << player_index+1 << ", you've found a peaceful oasis! This grants the player an extra turn to keep moving forward—take a deep breath and relax; you also gain 200 Stamina, Strength, and Wisdom Points." << endl << endl;
             playerData[player_index].addStamina(200);
             playerData[player_index].addStrength(200);
             playerData[player_index].addWisdom(200);
             playerData[player_index].setTilePosition(2);
             break;
         case 'P':
-            cout << "Player " << player_index << ", welcome to the land of enrichment - when landing on this tile, your Stamina, Strength, and Wisdom Points increase by 300, and you get to choose an advisor from the available list of advisors on your next turn. If you already have an advisor, you can switch your advisor out for a different one from the list or keep your original advisor. Don’t forget - an advisor can protect you from random events that negatively impact your Pride Points." << endl << endl;
+            cout << "Player " << player_index+1 << ", welcome to the land of enrichment - when landing on this tile, your Stamina, Strength, and Wisdom Points increase by 300, and you get to choose an advisor from the available list of advisors on your next turn. If you already have an advisor, you can switch your advisor out for a different one from the list or keep your original advisor. Don’t forget - an advisor can protect you from random events that negatively impact your Pride Points." << endl << endl;
             playerData[player_index].addStamina(300);
             playerData[player_index].addStrength(300);
             playerData[player_index].addWisdom(300);
             playerData[player_index].setTilePosition(1);
             break;
         case 'R':
-            cout << "Player " << player_index << ", uh-oh, you've stumbled into the Graveyard! This forces the player to move back 10 tiles and lose 100 Stamina, Strength, and Wisdom Points." << endl << endl;
+            cout << "Player " << player_index+1 << ", uh-oh, you've stumbled into the Graveyard! This forces the player to move back 10 tiles and lose 100 Stamina, Strength, and Wisdom Points." << endl << endl;
             playerData[player_index].addStamina(-100);
             playerData[player_index].addStrength(-100);
             playerData[player_index].addWisdom(-100);
-            _player_position[player_index] -= 10;
-            if(_player_position[player_index] < 0){
-                _player_position[player_index] = 0;
+            _player_position[player_index+1] -= 10;
+            if(_player_position[player_index+1] < 0){
+                _player_position[player_index+1] = 0;
             }
             break;
         case 'N':
-            cout << "Player " << player_index << ", the Hyenas are on the prowl! They drag you back to where you were last, and the journey comes at a cost. This returns the player to their previous position. In addition, the player's Stamina Points decrease by 300 Points." << endl << endl;
+            cout << "Player " << player_index+1 << ", the Hyenas are on the prowl! They drag you back to where you were last, and the journey comes at a cost. This returns the player to their previous position. In addition, the player's Stamina Points decrease by 300 Points." << endl << endl;
             playerData[player_index].addStamina(-300);
             _hyenaTile = 1;
             break;
         case 'U':
-            cout << "Player " << player_index << ", time for a test of wits! Land here, and you'll face a riddle randomly pulled from the riddles.txt file. Answer correctly, and you'll earn a boost of 500 Points to your Wisdom Trait—your cleverness pays off!" << endl << endl;
+            cout << "Player " << player_index+1 << ", time for a test of wits! Land here, and you'll face a riddle randomly pulled from the riddles.txt file. Answer correctly, and you'll earn a boost of 500 Points to your Wisdom Trait—your cleverness pays off!" << endl << endl;
             int riddleEvent = rand() % 3;
             string answer;
             cout << riddles[riddleEvent].getRiddleDescription() << endl;
@@ -421,12 +424,12 @@ int Board::getPlayerPosition(int player_index) const
 {
     if (player_index >= 0 && player_index <= _player_count)
     {
-        return _player_position[player_index + 1];
+        return _player_position[player_index];
     }
     return -1;
 }
 
-int Board::evaluatePlayer(int player_index, vector<Player> playerData){
+int Board::evaluatePlayer(int player_index,  Player playerData[5]){
     int points = playerData[player_index].getPridePoints() + (playerData[player_index].getStamina() * 10) + (playerData[player_index].getStrength() * 10) + (playerData[player_index].getWisdom() * 10);
     return points;
 }

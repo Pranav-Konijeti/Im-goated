@@ -1,3 +1,5 @@
+// Worked with Eddie Chiu
+
 #ifndef LIBRARY_H
 #define LIBRARY_H
 #include <iostream>

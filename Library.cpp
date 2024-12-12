@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Board.h"
 
+// split function 
 int Library::split(string input_string, char separator, string arr[], const int ARR_SIZE){
     int length = input_string.length();
     int start = 0;
@@ -37,12 +38,14 @@ int Library::split(string input_string, char separator, string arr[], const int 
     return splits;
 }
 
+// random number generator between 1 and 6 (spinner)
 int Library::runSpinner(int player_index){
     srand(time(0));
     int rNum = rand() % 6 + 1;
     return rNum;
 }
 
+// prints menu options
 void Library::printMenu(){
     cout << endl << "Main Menu" << endl;
     cout << "Select an option to continue" << endl << endl;
@@ -54,6 +57,7 @@ void Library::printMenu(){
     cout << endl;
 }
 
+// prints the menu and returns the option the player selects
 int Library::runMenu(string choice){
     choice = "0";
 

@@ -1,3 +1,5 @@
+// Worked with Eddie Chiu
+
 #ifndef BOARD_H
 #define BOARD_H
 #include "Tile.h"
@@ -26,10 +28,10 @@ public:
     void displayTrack(vector<int> player_indexs, bool board_type);
     void initializeBoard(int player_count, vector<bool> board_type);
     void displayBoard(vector<bool> board_type);
-    bool movePlayer(int player_index, bool board_type, vector<Player> playerData, RandomEvents randomEvents[8], vector<int> chosenAdvisor, RandomEvents riddles[3]);
-    void playerEvent(int player_index, bool board_type, vector<Player> playerData, RandomEvents randomEvents[8], vector<int> chosenAdvisor, RandomEvents riddles[3]);
+    bool movePlayer(int player_index, bool board_type, Player playerData[5], RandomEvents randomEvents[8], int chosenAdvisor[6], RandomEvents riddles[3]);
+    void playerEvent(int player_index, bool board_type, Player playerData[5], RandomEvents randomEvents[8], int chosenAdvisor[6], RandomEvents riddles[3]);
     int getPlayerPosition(int player_index) const;
-    int evaluatePlayer(int player_index, vector<Player> playerData);
+    int evaluatePlayer(int player_index, Player playerData[5]);
 };
 
 #endif

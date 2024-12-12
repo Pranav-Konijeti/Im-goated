@@ -1,4 +1,4 @@
-// Worked with Eddie Chiu
+// Worked with Pranav Konijeti
 
 #include "Board.h"
 #include "Tile.h"
@@ -9,6 +9,7 @@
 #include <fstream>
 
 int main() {
+    // variables
     Library lib;
 
     string tempName;
@@ -43,6 +44,7 @@ int main() {
 
     bool advisorAvail[6] = {false, false, false, false, false, false};
 
+    // opens character text file
     ifstream cfile("characters.txt");
     if (!cfile.is_open()){
         cout << "Error could not open file 'characters.txt'" << endl;
@@ -51,7 +53,7 @@ int main() {
     string cline;
 
     getline(cfile, cline);
-    
+    // reads the from the character text file and puts it into the character list vector
     while (getline(cfile, cline)){
         if (cline.empty()){
             continue;
@@ -70,6 +72,7 @@ int main() {
     cout << "Welcome to Game of Life" << endl;
     cout << "Enter the number of players that will participate, between 2 and 5." << endl;
     
+    // asks players for a player count, only accepting valid answers
     do{
         if(playerCountCounter > 0){
             cout << "Invalid player count chosen. Please choose a player count between 2 and 5" << endl;
@@ -80,7 +83,9 @@ int main() {
     } while(playerCount != "2" && playerCount != "3" && playerCount != "4" && playerCount != "5");
     actualPlayerCount = stoi(playerCount);
     
+    // loop for player names and character chocie
     for(int i = 0; i < actualPlayerCount; i++){
+        // for player names
         cout << "Player " << i + 1 << ", Please enter your name: ";
 
         do{
@@ -93,7 +98,7 @@ int main() {
         for(int l = 0; l < characterListSize; l++){
             characterList[l].printStats();
         }
-
+        // for character choice
         cout << endl << "Thank you, " << tempName << ". Choose your character from the list above." << endl;
         do{
             breaker1 = 0;
@@ -122,6 +127,7 @@ int main() {
         } while((tempChoice != "Mel" && tempChoice != "Miqel" && tempChoice != "Ryk" && tempChoice != "Mog" && tempChoice != "Ren") || breaker1 > 0);
         playerChoiceCounter = 0;
         chosenCharacters.push_back(tempChoice);
+        // removes from character list once character is chosen and also pushes character list detials into new vector
         for(int k = 0; k < 5; k++){
             if(tempChoice == characterList[k].getName()){
                 playerData.push_back(characterList[k]);
@@ -129,12 +135,15 @@ int main() {
             }
         }
     }
-
+    
+    // converts vector to array
     Player playerData2[5];
-    for(int i = 0; i < playerData.size(); i++){
+    int playerDataSize = playerData.size();
+    for(int i = 0; i < playerDataSize; i++){
         playerData2[i] = playerData[i];
     }
 
+    // loop for path chocie
     for(int i = 0; i < stoi(playerCount); i++){
         cout << "Player " << playerName[i] << ", enter 1 or 2 to choose the path your character shall embark on." << endl << endl << "Path 1: Pride Lands           Path 2: Cub Training" << endl;
         
@@ -151,6 +160,7 @@ int main() {
 
         pathChoiceCounter = 0;
 
+        // path choices
         if(pathChoice == "1"){
             playerData2[i].toPrideLands(200, 200, 200);
             cout << "You chose: Pride Lands. You gained 200 strength, 200 stamina, 200 wisdom, and 5000 pride points. Unfortunately, you do not get to choose an advisor at this time." << endl;
@@ -159,6 +169,7 @@ int main() {
         else{
             playerData2[i].toCubTraining(500, 500, 1000);
             bool choiceCompleted = false;
+            // allows people who choose cubtraining to choose available advisors
             while(!choiceCompleted){
                 cout << endl << "Available advisors:" << endl;
                 for(int j = 1; j <= 5; j++){

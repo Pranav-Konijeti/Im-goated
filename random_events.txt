@@ -1,8 +1,8 @@
-Aura Gained|0|0|800
-Training Fatigue|0|3|-500
-Hidden Oasis|1|0|600
-Scorching Weather conditions|1|4|-400
-Hidden Trap|1|5|-500
-Attacked by Lions|1|1|-500
-Darkness of Night|2|2|-400
-Gift of Sunshine|2|0|400
+Gained aura from a moment of enlightenment|1|0|800
+Trained too hard|1|3|-500
+Found a secret oasis|0|0|600
+Encountered scorching weather conditions|0|4|-400
+Encountered hidden trap|0|5|-500
+Attacked by lions|0|1|-500
+Scared by the darkness of night|2|2|-400
+Recieved a gift of sunshine|2|0|400

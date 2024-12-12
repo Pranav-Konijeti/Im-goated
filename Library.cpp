@@ -1,3 +1,5 @@
+// Worked with Eddie Chiu
+
 #include <iostream>
 #include <string>
 #include "Library.h"

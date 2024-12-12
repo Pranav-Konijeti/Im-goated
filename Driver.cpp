@@ -1,3 +1,5 @@
+// Worked with Eddie Chiu
+
 #include "Board.h"
 #include "Tile.h"
 #include "RandomEvents.h"
@@ -5,7 +7,6 @@
 #include "Player.h"
 #include <iostream>
 #include <fstream>
-// Worked on by Eddie Chiu and Pranav Konijeti
 
 int main() {
     Library lib;
@@ -15,7 +16,7 @@ int main() {
     string pathChoice;
     string playerCount;
     string characterLine;
-    string advisor[5];
+    string advisor[5] = {"Rafiki", "Nala", "Sarabi", "Zazu", "Sarafina"};
     string next;
     
     int playerCountCounter = 0;
@@ -23,14 +24,13 @@ int main() {
     int breaker1 = 0;
     int pathChoiceInteger;
     int pathChoiceCounter = 0;
-    int advisorChoiceCounter = 0;
     int actualPlayerCount;
     int counter = 0;
     int counter2 = 0;
     int wonCount = 0;
 
     RandomEvents randomEvents[8];
-    RandomEvents riddles[3];
+    RandomEvents riddles[2];
 
     vector<bool> boardType;
     vector<string> playerName;
@@ -40,6 +40,8 @@ int main() {
     vector<int> chosenAdvisor;
     vector<bool> endReached;
     vector<int> playerPoints;
+
+    bool advisorAvail[6] = {false, false, false, false, false, false};
 
     ifstream cfile("characters.txt");
     if (!cfile.is_open()){
@@ -63,10 +65,6 @@ int main() {
         currentPlayer.setPridePoints(stoi(player[5]));
 
         characterList.push_back(currentPlayer);
-
-        currentPlayer.printStats();
-        
-        cout << endl;
     }
 
     cout << "Welcome to Game of Life" << endl;
@@ -84,9 +82,17 @@ int main() {
     
     for(int i = 0; i < actualPlayerCount; i++){
         cout << "Player " << i + 1 << ", Please enter your name: ";
-        getline(cin, tempName);
+
+        do{
+            getline(cin, tempName);
+        }while(tempName.empty());
         playerName.push_back(tempName);
         endReached.push_back(false);
+
+        int characterListSize = characterList.size();
+        for(int l = 0; l < characterListSize; l++){
+            characterList[l].printStats();
+        }
 
         cout << endl << "Thank you, " << tempName << ". Choose your character from the list above." << endl;
         do{
@@ -119,13 +125,18 @@ int main() {
         for(int k = 0; k < 5; k++){
             if(tempChoice == characterList[k].getName()){
                 playerData.push_back(characterList[k]);
+                characterList.erase(characterList.begin() + k);
             }
         }
     }
 
+    Player playerData2[5];
+    for(int i = 0; i < playerData.size(); i++){
+        playerData2[i] = playerData[i];
+    }
+
     for(int i = 0; i < stoi(playerCount); i++){
         cout << "Player " << playerName[i] << ", enter 1 or 2 to choose the path your character shall embark on." << endl << endl << "Path 1: Pride Lands           Path 2: Cub Training" << endl;
-        
         
         do{
             if(pathChoiceCounter > 0){
@@ -141,43 +152,69 @@ int main() {
         pathChoiceCounter = 0;
 
         if(pathChoice == "1"){
-            playerData[i].toPrideLands(200, 200, 200);
+            playerData2[i].toPrideLands(200, 200, 200);
             cout << "You chose: Pride Lands. You gained 200 strength, 200 stamina, 200 wisdom, and 5000 pride points. Unfortunately, you do not get to choose an advisor at this time." << endl;
             chosenAdvisor.push_back(0);
         }
         else{
-            playerData[i].toCubTraining(500, 500, 1000);
-            cout << "You chose: Cub Training. You gained 500 strength, 500 stamina, 1000 wisdom, but lost 5000 pride points. Now please choose an advisor from the list below by typing their name." << endl << endl;
-            cout << "1. Rafiki - Invisibility (the ability to become un-seen)" << endl;
-            cout << "2. Nala - Night Vision (the ability to see clearly in darkness)" << endl;
-            cout << "3. Sarabi - Energy Manipulation (the ability to shape and control the properties of energy)" << endl;
-            cout << "4. Zazu - Weather Control (the ability to influence and manipulate weather patterns)" << endl;
-            cout << "5. Sarafina - Super Speed (the ability to run 4x faster than the maximum speed of lions)" << endl;
-            do{
-                if(advisorChoiceCounter > 0){
-                    cout << "Invalid advisor chosen. Please choose an advisor from the list above." << endl;
+            playerData2[i].toCubTraining(500, 500, 1000);
+            bool choiceCompleted = false;
+            while(!choiceCompleted){
+                cout << endl << "Available advisors:" << endl;
+                for(int j = 1; j <= 5; j++){
+                    if(!advisorAvail[j]){
+                        switch(j){
+                            case 1:
+                                cout << "1. Rafiki - Invisibility (the ability to become un-seen)" << endl;
+                                break;
+                            case 2:
+                                cout << "2. Nala - Night Vision (the ability to see clearly in darkness)" << endl;
+                                break;
+                            case 3:
+                                cout << "3. Sarabi - Energy Manipulation (the ability to shape and control the properties of energy)" << endl;
+                                break;
+                            case 4:
+                                cout << "4. Zazu - Weather Control (the ability to influence and manipulate weather patterns)" << endl;
+                                break;
+                            case 5:
+                                cout << "5. Sarafina - Super Speed (the ability to run 4x faster than the maximum speed of lions)" << endl;
+                        }
+                    }
                 }
-                getline(cin, advisor[i]);
-                advisorChoiceCounter++;
-            } while(advisor[i] != "Rafiki" && advisor[i] != "Nala" && advisor[i] != "Sarabi" && advisor[i] != "Zazu" && advisor[i] != "Sarafina");
-            cout << "You chose: " << advisor[i] << "." << endl;
-            if(advisor[i] == "Rafiki"){
-                chosenAdvisor.push_back(1);
-            }
-            if(advisor[i] == "Nala"){
-                chosenAdvisor.push_back(2);
-            }
-            if(advisor[i] == "Sarabi"){
-                chosenAdvisor.push_back(3);
-            }
-            if(advisor[i] == "Zazu"){
-                chosenAdvisor.push_back(4);
-            }
-            if(advisor[i] == "Sarafina"){
-                chosenAdvisor.push_back(5);
+
+                string advisorChoice;
+                getline(cin, advisorChoice);
+                int cAdvisorSize = chosenAdvisor.size();
+
+                if (advisorChoice == "1" || advisorChoice == "2" || advisorChoice == "3" || advisorChoice == "4" || advisorChoice == "5") {
+                    if(!advisorAvail[stoi(advisorChoice)]){
+                        if(cAdvisorSize > i && chosenAdvisor[i] != 0){
+                            advisorAvail[chosenAdvisor[i]] = false;
+                        }
+
+                        if(cAdvisorSize <= i){
+                            chosenAdvisor.push_back(stoi(advisorChoice));
+                        }else{
+                            chosenAdvisor[i] = stoi(advisorChoice);
+                        }
+
+                        advisorAvail[stoi(advisorChoice)] = true;
+                        cout << "You have chosen " << advisor[stoi(advisorChoice) - 1] << " successfully!" << endl;
+                        choiceCompleted = true;
+                    }else{
+                        cout << "This advisor has already been chosen by another player. Please select a different advisor." << endl << endl;
+                    }
+                } else {
+                    cout << "Invalid choice. Please choose a valid advisor." << endl << endl;
+                }
             }
         }
-        advisorChoiceCounter = 0;
+        pathChoiceCounter = 0;
+    }
+
+    int chosenAdvisor2[6];
+    for(int i = 0; i < chosenAdvisor.size(); i++){
+        chosenAdvisor2[i] = chosenAdvisor[i];
     }
 
     Board board(actualPlayerCount, boardType);
@@ -228,7 +265,7 @@ int main() {
 
     bool wonGame = false;
     int currentPlayer = 0;
-    string advisorChoice;
+    string advisorChoice2;
 
     while(!wonGame){
         cout << "It is now Player " << currentPlayer + 1 << "'s turn." << endl;
@@ -239,25 +276,25 @@ int main() {
 
             switch(choice){
                 case 1:
-                    cout << playerName[currentPlayer] << "'s Pride points: " << playerData[currentPlayer].getPridePoints() << endl;
-                    cout << playerName[currentPlayer] << "'s Stamina: " << playerData[currentPlayer].getStamina() << endl;
-                    cout << playerName[currentPlayer] << "'s Strength: " << playerData[currentPlayer].getStrength() << endl;
-                    cout << playerName[currentPlayer] << "'s Wisdom: " << playerData[currentPlayer].getWisdom() << endl;
+                    cout << playerName[currentPlayer] << "'s Strength: " << playerData2[currentPlayer].getStrength() << endl;
+                    cout << playerName[currentPlayer] << "'s Stamina: " << playerData2[currentPlayer].getStamina() << endl;
+                    cout << playerName[currentPlayer] << "'s Wisdom: " << playerData2[currentPlayer].getWisdom() << endl;
+                    cout << playerName[currentPlayer] << "'s Pride points: " << playerData2[currentPlayer].getPridePoints() << endl;
                     cout << "Would you like to display your full stats? Press Y to display full stats, press anything else to go back to main menu." << endl;
                     char statsChoice1;
                     cin >> statsChoice1;
                     if (toupper(statsChoice1) == 'Y') {
-                        playerData[currentPlayer].printStats();
+                        playerData2[currentPlayer].printStats();
                     }
                     break;
                 case 2:
-                    cout << playerName[currentPlayer] << "'s Character: " << playerData[currentPlayer].getName() << endl;
-                    cout << playerName[currentPlayer] << "'s Age: " << playerData[currentPlayer].getAge() << endl;
+                    cout << playerName[currentPlayer] << "'s Character: " << playerData2[currentPlayer].getName() << endl;
+                    cout << playerName[currentPlayer] << "'s Age: " << playerData2[currentPlayer].getAge() << endl;
                     cout << "Would you like to display your full stats? Press Y to display full stats, press anything else to go back to main menu." << endl;
                     char statsChoice2;
                     cin >> statsChoice2;
                     if (toupper(statsChoice2) == 'Y') {
-                        playerData[currentPlayer].printStats();
+                        playerData2[currentPlayer].printStats();
                     }
                     break;
                 case 3:
@@ -304,35 +341,78 @@ int main() {
                                 cout << "Not on counseling tile. You can only choose or change an advisor on the counseling tile." << endl;
                                 break;
                             }else{
-                                cout << "Available advisors:" << endl;
-                                cout << "1. Rafiki - Invisibility" << endl;
-                                cout << "2. Nala - Night Vision" << endl;
-                                cout << "3. Sarabi - Energy Manipulation" << endl;
-                                cout << "4. Zazu - Weather Control" << endl;
-                                cout << "5. Sarafina - Super Speed" << endl;
-                                cout << "Enter your choice (1-5): ";
-                                
+                                bool choiceCompleted = false;
+                                while(!choiceCompleted){
+                                    cout << "Available advisors:" << endl;
 
-                                int advisorChoice;
-                                cin >> advisorChoice;
+                                    for(int i = 1; i <= 5; i++){
+                                        if(!advisorAvail[i]){
+                                            switch(i){
+                                                case 1:
+                                                    cout << "1. Rafiki - Invisibility (the ability to become un-seen)" << endl;
+                                                    break;
+                                                case 2:
+                                                    cout << "2. Nala - Night Vision (the ability to see clearly in darkness)" << endl;
+                                                    break;
+                                                case 3:
+                                                    cout << "3. Sarabi - Energy Manipulation (the ability to shape and control the properties of energy)" << endl;
+                                                    break;
+                                                case 4:
+                                                    cout << "4. Zazu - Weather Control (the ability to influence and manipulate weather patterns)" << endl;
+                                                    break;
+                                                case 5:
+                                                    cout << "5. Sarafina - Super Speed (the ability to run 4x faster than the maximum speed of lions)" << endl;
+                                            }
+                                        }
+                                    }
+                                    
+                                    getline(cin, advisorChoice2);
+                                    int cAdvisorSize = chosenAdvisor.size();
 
-                                if (advisorChoice >= 1 && advisorChoice <= 5) {
-                                    chosenAdvisor[currentPlayer] = advisorChoice;
-                                    cout << "You have chosen " << advisor << " successfully!" << endl;
-                                } else {
-                                    cout << "Invalid choice. Advisor not changed." << endl;
+                                    if(advisorChoice2.empty()){
+                                        getline(cin, advisorChoice2);
+                                    }
+
+                                    if (advisorChoice2 == "1" || advisorChoice2 == "2" || advisorChoice2 == "3" || advisorChoice2 == "4" || advisorChoice2 == "5") {
+                                        if(!advisorAvail[stoi(advisorChoice2)]){
+                                            if(cAdvisorSize > currentPlayer && chosenAdvisor[currentPlayer] != 0){
+                                                advisorAvail[chosenAdvisor[currentPlayer]] = false;
+                                            }
+
+                                            if(cAdvisorSize <= currentPlayer){
+                                                chosenAdvisor.push_back(stoi(advisorChoice2));
+                                            }else{
+                                                chosenAdvisor[currentPlayer] = stoi(advisorChoice2);
+                                            }
+
+                                            advisorAvail[stoi(advisorChoice2)] = true;
+                                            cout << "You have chosen " << advisor[stoi(advisorChoice2) - 1] << " successfully!" << endl;
+                                            choiceCompleted = true;
+                                        }else{
+                                            cout << "This advisor has already been chosen by another player. Please select a different advisor." << endl;
+                                        }
+                                    } else {
+                                        cout << "Invalid choice. Please choose a valid advisor." << endl;
+                                    }
                                 }
                             }
                         }
-                        break;
+                    break;
                 case 5:
-                    playerData[currentPlayer].setTilePosition(0);
-                    board.movePlayer(currentPlayer, boardType[currentPlayer], playerData, randomEvents, chosenAdvisor, riddles);
+                    playerData2[currentPlayer].setTilePosition(0);
+                    board.movePlayer(currentPlayer, boardType[currentPlayer], playerData2, randomEvents, chosenAdvisor2, riddles);
                     board.displayBoard(boardType);
-                    cout << "Press anything and click enter to go to the next player's turn" << endl;
-                    cin >> next;
-                    if(playerData[currentPlayer].getTilePosition() == 2){
-                        playerData[currentPlayer].setTilePosition(0);
+                    if (board.getPlayerPosition(currentPlayer+1) == 51){
+                        cout << playerName[currentPlayer] << " has reached the pride rock!" << endl;
+                        wonCount++;
+                        endReached[currentPlayer] = true;
+                    }
+                    if(wonCount != actualPlayerCount){
+                        cout << "Press anything and click enter to go to the next player's turn" << endl;
+                        cin >> next;
+                    }
+                    if(playerData2[currentPlayer].getTilePosition() == 2){
+                        playerData2[currentPlayer].setTilePosition(0);
                         continue;
                     }
                     turnEnd = true;
@@ -343,11 +423,6 @@ int main() {
             }
         }
         //cycles players turns and skips over players that have already reached the end
-        if (board.getPlayerPosition(currentPlayer) == 51){
-            cout << playerName[currentPlayer] << " has reached the end!" << endl;
-            wonCount++;
-            endReached[currentPlayer] = true;
-        }
         
         if(wonCount == actualPlayerCount){
             turnEnd = true;
@@ -360,8 +435,11 @@ int main() {
         }while(endReached[currentPlayer] == true);
     }
 
+    playerData2[0].printStats();
+    playerData2[1].printStats();
+
     for(int i = 0; i < actualPlayerCount; i++){
-        int points = board.evaluatePlayer(currentPlayer, playerData);
+        int points = board.evaluatePlayer(i, playerData2);
         playerPoints.push_back(points);
     }
 
@@ -383,7 +461,7 @@ int main() {
 
     //prints sorted player points
     cout << "Leaderboard:" << endl;
-    for(int i = actualPlayerCount - 1, j = 0; i >= 0; i++, j++){
+    for(int i = actualPlayerCount - 1, j = 0; i >= 0; i--, j++){
         cout << j + 1 << " - " << playerName[i] << ": " << playerPoints[i] << endl;
     }
     cout << endl;
@@ -394,6 +472,19 @@ int main() {
         if(playerPoints[i] == playerPoints[actualPlayerCount - 1]){
             cout << j + 1 << " - " << playerName[i] << ": " << playerPoints[i] << endl;
         }
+    }
+
+    ofstream gameStats("endstats.txt");
+
+    for(int i = 0; i < actualPlayerCount; i++){
+        gameStats << "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*" << endl;
+        gameStats << "Player Stats:" << endl << endl;
+        gameStats << playerData[i].getName() << ", age " << playerData[i].getAge() << endl;
+        gameStats << "Strength: " << playerData[i].getStrength() << endl;
+        gameStats << "Stamina: " << playerData[i].getStamina() << endl;
+        gameStats << "Wisdom: " << playerData[i].getWisdom() << endl;
+        gameStats << "Pride Points: " << playerData[i].getPridePoints() << endl;
+        gameStats << "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*" << endl << endl;
     }
 
     return 0;

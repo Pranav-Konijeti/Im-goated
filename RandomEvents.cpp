@@ -1,3 +1,5 @@
+// Worked with Eddie Chiu
+
 #include "RandomEvents.h"
 
 RandomEvents::RandomEvents(){

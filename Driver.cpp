@@ -1,4 +1,4 @@
-// Worked with Pranav Konijeti
+// Worked with Eddie Chiu
 
 #include "Board.h"
 #include "Tile.h"
@@ -197,18 +197,23 @@ int main() {
                 getline(cin, advisorChoice);
                 int cAdvisorSize = chosenAdvisor.size();
 
+                // makes sure player chooses a valid advisor
                 if (advisorChoice == "1" || advisorChoice == "2" || advisorChoice == "3" || advisorChoice == "4" || advisorChoice == "5") {
                     if(!advisorAvail[stoi(advisorChoice)]){
+
+                        // deselects chosen advisor, if they have one
                         if(cAdvisorSize > i && chosenAdvisor[i] != 0){
                             advisorAvail[chosenAdvisor[i]] = false;
                         }
 
+                        // updates advisor
                         if(cAdvisorSize <= i){
                             chosenAdvisor.push_back(stoi(advisorChoice));
                         }else{
                             chosenAdvisor[i] = stoi(advisorChoice);
                         }
 
+                        // selects chosen advisor so other players cant choose the same one
                         advisorAvail[stoi(advisorChoice)] = true;
                         cout << "You have chosen " << advisor[stoi(advisorChoice) - 1] << " successfully!" << endl;
                         choiceCompleted = true;
@@ -223,14 +228,18 @@ int main() {
         pathChoiceCounter = 0;
     }
 
+    // stores chosen advisor vector into array
     int chosenAdvisor2[6];
-    for(int i = 0; i < chosenAdvisor.size(); i++){
+    int chosenAdvisorSize = chosenAdvisor.size();
+    for(int i = 0; i < chosenAdvisorSize; i++){
         chosenAdvisor2[i] = chosenAdvisor[i];
     }
 
+    // displays board after each player finishes character creation
     Board board(actualPlayerCount, boardType);
     board.displayBoard(boardType);
 
+    // opens "random.events.txt"
     ifstream eventfile("random_events.txt");
     if (!eventfile.is_open()){
         cout << "Error could not open file 'random_events.txt'" << endl;
@@ -238,7 +247,7 @@ int main() {
     }
     string eventline;
 
-    
+    // reads from "random_events.txt" and uses split function to store description, path type, advisor data, and pride points added/subtracted
     while (getline(eventfile, eventline)){
         if (eventline.empty()){
             continue;
@@ -253,6 +262,7 @@ int main() {
         counter++;
     }
 
+    // opens "riddles.txt"
     ifstream eventfile2("riddles.txt");
     if (!eventfile2.is_open()){
         cout << "Error could not open file 'random_events.txt'" << endl;
@@ -260,7 +270,7 @@ int main() {
     }
     string eventline2;
 
-    
+    // reads from "riddle.txt" and uses split function to store description and answer
     while (getline(eventfile2, eventline2)){
         if (eventline2.empty()){
             continue;
@@ -274,23 +284,30 @@ int main() {
         counter2++;
     }
 
+    // game variables
     bool wonGame = false;
     int currentPlayer = 0;
     string advisorChoice2;
 
+    // continuously runs the game as long as there is someone who hasnt reached the end
     while(!wonGame){
+        // outputs the player's turn to avoid confusion
         cout << "It is now Player " << currentPlayer + 1 << "'s turn." << endl;
+        // resets turnEnded bool
         bool turnEnd = false;
 
+        // runs menu while the player's turn is still going on
         while(!turnEnd){
             int choice = lib.runMenu("0");
 
             switch(choice){
+                // displays player strength, stamina, wisdom, and pride points
                 case 1:
                     cout << playerName[currentPlayer] << "'s Strength: " << playerData2[currentPlayer].getStrength() << endl;
                     cout << playerName[currentPlayer] << "'s Stamina: " << playerData2[currentPlayer].getStamina() << endl;
                     cout << playerName[currentPlayer] << "'s Wisdom: " << playerData2[currentPlayer].getWisdom() << endl;
                     cout << playerName[currentPlayer] << "'s Pride points: " << playerData2[currentPlayer].getPridePoints() << endl;
+                    // second option to display full stats
                     cout << "Would you like to display your full stats? Press Y to display full stats, press anything else to go back to main menu." << endl;
                     char statsChoice1;
                     cin >> statsChoice1;
@@ -298,9 +315,11 @@ int main() {
                         playerData2[currentPlayer].printStats();
                     }
                     break;
+                // displays player name and age
                 case 2:
                     cout << playerName[currentPlayer] << "'s Character: " << playerData2[currentPlayer].getName() << endl;
                     cout << playerName[currentPlayer] << "'s Age: " << playerData2[currentPlayer].getAge() << endl;
+                    // second option to display full stats
                     cout << "Would you like to display your full stats? Press Y to display full stats, press anything else to go back to main menu." << endl;
                     char statsChoice2;
                     cin >> statsChoice2;
@@ -308,9 +327,11 @@ int main() {
                         playerData2[currentPlayer].printStats();
                     }
                     break;
+                // displays board
                 case 3:
                     board.displayBoard(boardType);
                     break;
+                // displays player advisor, if they have one
                 case 4:
                     switch(chosenAdvisor[currentPlayer]){
                         case 0:
@@ -347,12 +368,14 @@ int main() {
                             cin >> choice;
                         }
 
+                        // allows player to change advisor only if they are on a counseling tile
                         if (toupper(choice) == 'Y') {
                             if(playerData[currentPlayer].getTilePosition() == 0 || playerData[currentPlayer].getTilePosition() == 2){
                                 cout << "Not on counseling tile. You can only choose or change an advisor on the counseling tile." << endl;
                                 break;
                             }else{
                                 bool choiceCompleted = false;
+                                // displays list of advisors that havent been chosen
                                 while(!choiceCompleted){
                                     cout << "Available advisors:" << endl;
 
@@ -377,25 +400,31 @@ int main() {
                                         }
                                     }
                                     
+                                    // getline instead of cin for error handling
                                     getline(cin, advisorChoice2);
                                     int cAdvisorSize = chosenAdvisor.size();
 
+                                    // if player input is empty, make them input again
                                     if(advisorChoice2.empty()){
                                         getline(cin, advisorChoice2);
                                     }
 
+                                    // makes sure player chooses a valid advisor
                                     if (advisorChoice2 == "1" || advisorChoice2 == "2" || advisorChoice2 == "3" || advisorChoice2 == "4" || advisorChoice2 == "5") {
                                         if(!advisorAvail[stoi(advisorChoice2)]){
+                                            // deselects chosen advisor, if they have one
                                             if(cAdvisorSize > currentPlayer && chosenAdvisor[currentPlayer] != 0){
                                                 advisorAvail[chosenAdvisor[currentPlayer]] = false;
                                             }
 
+                                            // updates advisor
                                             if(cAdvisorSize <= currentPlayer){
                                                 chosenAdvisor.push_back(stoi(advisorChoice2));
                                             }else{
                                                 chosenAdvisor[currentPlayer] = stoi(advisorChoice2);
                                             }
-
+                                            
+                                            // selects chosen advisor so other players cant choose the same one
                                             advisorAvail[stoi(advisorChoice2)] = true;
                                             cout << "You have chosen " << advisor[stoi(advisorChoice2) - 1] << " successfully!" << endl;
                                             choiceCompleted = true;
@@ -410,18 +439,22 @@ int main() {
                         }
                     break;
                 case 5:
+                    // moves the player by running move function and displays the board
                     playerData2[currentPlayer].setTilePosition(0);
                     board.movePlayer(currentPlayer, boardType[currentPlayer], playerData2, randomEvents, chosenAdvisor2, riddles);
                     board.displayBoard(boardType);
+                    // lets the player know if they have reached the end
                     if (board.getPlayerPosition(currentPlayer+1) == 51){
                         cout << playerName[currentPlayer] << " has reached the pride rock!" << endl;
                         wonCount++;
                         endReached[currentPlayer] = true;
                     }
+                    // runs when there are more than one player still playing
                     if(wonCount != actualPlayerCount){
                         cout << "Press anything and click enter to go to the next player's turn" << endl;
                         cin >> next;
                     }
+                    // runs if the player gets another turn on oasis tile
                     if(playerData2[currentPlayer].getTilePosition() == 2){
                         playerData2[currentPlayer].setTilePosition(0);
                         continue;
@@ -433,8 +466,8 @@ int main() {
                     break;
             }
         }
-        //cycles players turns and skips over players that have already reached the end
-        
+
+        // cycles players turns and skips over players that have already reached the end
         if(wonCount == actualPlayerCount){
             turnEnd = true;
             wonGame = true;
@@ -446,15 +479,13 @@ int main() {
         }while(endReached[currentPlayer] == true);
     }
 
-    playerData2[0].printStats();
-    playerData2[1].printStats();
-
+    // runs the evaluate player function for each player
     for(int i = 0; i < actualPlayerCount; i++){
         int points = board.evaluatePlayer(i, playerData2);
         playerPoints.push_back(points);
     }
 
-    //selection sort player points
+    // selection sort player points
     int n = playerPoints.size();
     for(int i = 0; i < n - 1; i++){
         int min = i;
@@ -470,13 +501,14 @@ int main() {
         }
     }
 
-    //prints sorted player points
+    // prints sorted player points
     cout << "Leaderboard:" << endl;
     for(int i = actualPlayerCount - 1, j = 0; i >= 0; i--, j++){
         cout << j + 1 << " - " << playerName[i] << ": " << playerPoints[i] << endl;
     }
     cout << endl;
 
+    // outputs the winner, inckuding if the player ties with another player
     cout << endl << "Winner(s):" << endl;
     cout << 1 << " - " << playerName[actualPlayerCount - 1] << ": " << playerPoints[actualPlayerCount - 1] << endl;
     for(int i = actualPlayerCount - 2, j = 1; i >= 0; i--, j++){
@@ -485,16 +517,18 @@ int main() {
         }
     }
 
+    // writes to "endstats.txt" the ending stats of each player
     ofstream gameStats("endstats.txt");
 
+    // loops for each player
     for(int i = 0; i < actualPlayerCount; i++){
         gameStats << "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*" << endl;
         gameStats << "Player Stats:" << endl << endl;
-        gameStats << playerData[i].getName() << ", age " << playerData[i].getAge() << endl;
-        gameStats << "Strength: " << playerData[i].getStrength() << endl;
-        gameStats << "Stamina: " << playerData[i].getStamina() << endl;
-        gameStats << "Wisdom: " << playerData[i].getWisdom() << endl;
-        gameStats << "Pride Points: " << playerData[i].getPridePoints() << endl;
+        gameStats << playerData2[i].getName() << ", age " << playerData2[i].getAge() << endl;
+        gameStats << "Strength: " << playerData2[i].getStrength() << endl;
+        gameStats << "Stamina: " << playerData2[i].getStamina() << endl;
+        gameStats << "Wisdom: " << playerData2[i].getWisdom() << endl;
+        gameStats << "Pride Points: " << playerData2[i].getPridePoints() << endl;
         gameStats << "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*" << endl << endl;
     }
 

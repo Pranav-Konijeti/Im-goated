@@ -1,12 +1,15 @@
-// Worked with Eddie Chiu
+// Worked with Pranav Konijeti
 
 #include "RandomEvents.h"
 
+// constructors
 RandomEvents::RandomEvents(){
     _description = "";
     _pathType = 0;
     _advisor = 0;
     _pridePoints = 0;
+    _riddleDescription = "";
+    _riddleAnswer = "";
 }
 
 RandomEvents::RandomEvents(string description, int pathType, int advisor, int pridePoints){
@@ -16,6 +19,8 @@ RandomEvents::RandomEvents(string description, int pathType, int advisor, int pr
     _pridePoints = pridePoints;
 }
 
+
+//getters for riddles
 string RandomEvents::getRiddleDescription(){
     return _riddleDescription;
 }
@@ -23,7 +28,7 @@ string RandomEvents::getRiddleAnswer(){
     return _riddleAnswer;
 }
 
-
+//getters for random events
 string RandomEvents::getDescription(){
     return _description;
 }
@@ -37,6 +42,7 @@ int RandomEvents::getPridePoints(){
     return _pridePoints;
 }
 
+//setters for random events
 string RandomEvents::setDescription(string description){
     _description = description;
     return _description;
@@ -53,6 +59,8 @@ int RandomEvents::setPridePoints(int pridePoints){
     _pridePoints = pridePoints;
     return _pridePoints;
 }
+
+//setters for riddles
 
 string RandomEvents::setRiddleDescription(string description2){
     _riddleDescription = description2;

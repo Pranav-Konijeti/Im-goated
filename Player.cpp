@@ -1,3 +1,5 @@
+// Worked with Eddie Chiu
+
 #include "Player.h"
 
 //Constructors

@@ -1,3 +1,5 @@
+// Worked with Eddie Chiu
+
 #ifndef RANDOMEVENTS_H
 #define RANDOMEVENTS_H
 #include <iostream>
